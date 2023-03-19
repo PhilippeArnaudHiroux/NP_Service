@@ -12,9 +12,6 @@ using namespace std;
 
 int main(void)
 {
-    string datatest = "PAH_test";
-    int lengte_datatest = datatest.size();
-
     try
     {
         zmq::context_t context(1);
@@ -22,12 +19,14 @@ int main(void)
         //Outgoing message go out through here
         zmq::socket_t ventilator( context, ZMQ_PUSH );
         ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );
+        //ventilator.connect( "tcp://localhost:24041" );
 
         while( ventilator.connected() )
         {
             sleep( 1000 );
-            ventilator.send( &datatest, lengte_datatest);
-            std::cout << "Pushed : " << datatest << std::endl;
+            //ventilator.send( &datatest, lengte_datatest);
+            ventilator.send( "PAH", strlen("PAH"));
+            std::cout << "Pushed : " << "PAH_test" << std::endl;
         }
     }
     catch( zmq::error_t & ex )

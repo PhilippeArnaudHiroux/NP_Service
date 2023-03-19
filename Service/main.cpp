@@ -2,12 +2,11 @@
 #include <string>
 #include <zmq.hpp>
 
-using namespace std;
+#define TEST "PAH"
 
 int main( void )
 {
-    string datatest = "PAH_test";
-    int lengte_datatest = datatest.size();
+    std::string test = "PAH";
 
     try
     {
@@ -15,8 +14,10 @@ int main( void )
 
         //Incoming messages come in here
         zmq::socket_t subscriber( context, ZMQ_SUB );
+//		subscriber.connect( "tcp://192.168.1.8:24042" );
+//		subscriber.connect( "tcp://localhost:24042" );
         subscriber.connect( "tcp://benternet.pxl-ea-ict.be:24042" );
-        subscriber.setsockopt( ZMQ_SUBSCRIBE, "PAH_test", strlen("PAH_test") );
+        subscriber.setsockopt( ZMQ_SUBSCRIBE, TEST, strlen(TEST) );
 
         zmq::message_t * msg = new zmq::message_t();
         while( subscriber.connected() )
