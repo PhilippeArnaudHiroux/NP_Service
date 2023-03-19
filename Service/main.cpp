@@ -26,13 +26,17 @@ int main( void )
         zmq::message_t * msg = new zmq::message_t();
         while( subscriber.connected() && ventilator.connected() )
         {
+            sleep(1000);
             //Service sub
             subscriber.recv( msg );
-            std::cout << "Subscribed : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
+            sleep(1000);
+            std::cout << "Service sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
+            sleep(1000);
 
             //Service push
             ventilator.send( "gelukt", strlen("gelukt"));
-            std::cout << "service Pushed : " << "gelukt" << std::endl;
+            sleep(1000);
+            std::cout << "service Push : " << "gelukt" << std::endl;
         }
     }
     catch( zmq::error_t & ex )
