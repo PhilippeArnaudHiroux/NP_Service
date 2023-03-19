@@ -72,3 +72,6 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+# Ignore folders with the word build in it
+**/*build*/
+
