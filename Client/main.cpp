@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <zmq.hpp>
+#include <cstring>
 #ifndef _WIN32
     #include <unistd.h>
 #else
@@ -12,6 +13,8 @@ using namespace std;
 
 int main(void)
 {
+    string data_send = "";
+
     try
     {
         zmq::context_t context(1);
@@ -28,16 +31,15 @@ int main(void)
         while( ventilator.connected() && subscriber.connected())
         {
             sleep(1000);
+            cout << "Geef een tekst in: ";
+            cin >> data_send;
 
             // Client push
-            ventilator.send("PAH", strlen("PAH"));
-            sleep(1000);
+            ventilator.send(data_send.c_str(), data_send.size());
             std::cout << "client push : " << "PAH" << std::endl;
-            sleep(1000);
 
             //Client sub
             subscriber.recv( msg );
-            sleep(1000);
             std::cout << "Client sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
 }
     }
