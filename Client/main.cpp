@@ -11,9 +11,12 @@
 
 using namespace std;
 
+string remove(string removeFrom);
+
 int main(void)
 {
     string data_send = "";
+    string data_ontvangen = "";
 
     try
     {
@@ -25,7 +28,7 @@ int main(void)
         ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" ); //Client  push
         subscriber.connect( "tcp://benternet.pxl-ea-ict.be:24042" ); //Client sub
         //subscriber.setsockopt( ZMQ_SUBSCRIBE, "gelukt", strlen("gelukt") ); //Client sub
-        subscriber.setsockopt( ZMQ_SUBSCRIBE, "gelukt", strlen("gelukt") ); //Client sub
+        subscriber.setsockopt( ZMQ_SUBSCRIBE, "hpa", strlen("hpa") ); //Client sub
 
         zmq::message_t * msg = new zmq::message_t(); //Client sub
         while( ventilator.connected() && subscriber.connected())
@@ -39,9 +42,14 @@ int main(void)
             std::cout << "client push : " << "PAH" << std::endl;
 
             //Client sub
+            do{
             subscriber.recv( msg );
-            std::cout << "Client sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
-}
+            data_ontvangen = string( (char*) msg->data(), msg->size() );
+            //std::cout << "Client sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
+            data_ontvangen = remove(data_ontvangen);
+            cout << data_ontvangen << endl;
+            }while(data_ontvangen != "end");
+        }
     }
     catch( zmq::error_t & ex )
     {
@@ -49,4 +57,10 @@ int main(void)
     }
 
     return 0;
+}
+
+string remove(string removeFrom)
+{
+    removeFrom.erase(0,3);
+    return removeFrom;
 }
