@@ -16,7 +16,6 @@ string remove(string removeFrom);
 
 int main( void )
 {
-    string subTopic = "pah";
     string gekregenString = "";
     int i = 0;
 
@@ -27,53 +26,48 @@ int main( void )
         zmq::context_t context(1);
 
         //Incoming messages come in here
-        zmq::socket_t subscriber( context, ZMQ_SUB ); //Service sub
-        zmq::socket_t ventilator( context, ZMQ_PUSH ); //Service push
-        subscriber.connect( "tcp://benternet.pxl-ea-ict.be:24042" ); //Service sub
-        ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" ); //Service push
-        subscriber.setsockopt( ZMQ_SUBSCRIBE, "pah", strlen("pah")); //Service sub
+        zmq::socket_t subscriber( context, ZMQ_SUB );                   //Service sub
+        zmq::socket_t ventilator( context, ZMQ_PUSH );                  //Service push
+        subscriber.connect( "tcp://benternet.pxl-ea-ict.be:24042" );    //Service sub
+        ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );    //Service push
+        subscriber.setsockopt( ZMQ_SUBSCRIBE, "pah", strlen("pah"));    //Service sub
 
         zmq::message_t * msg = new zmq::message_t();
         while( subscriber.connected() && ventilator.connected() )
         {
-            //Service sub
-            subscriber.recv( msg );
-            gekregenString = string((char*) msg->data(), msg->size()); //Vorm ontvangen data om naar een string
-            gekregenString = remove(gekregenString); //Verwijder de eerste 3 karakters van de string (sub topic)
+            subscriber.recv( msg );                                     //Ontvang het bericht
+            gekregenString = string((char*) msg->data(), msg->size());  //Vorm ontvangen data om naar een string
+            gekregenString = remove(gekregenString);                    //Verwijder de eerste 3 karakters van de string (sub topic)
 
-            //Kijken naar add of get
-            if(gekregenString[0] == 'a')
+            if(gekregenString[0] == 'a')                                                    //Als er add moet gebeuren
             {
-                gekregenString = remove(gekregenString); //Verwijder 3 eerste karakters
-                cout << "add " << gekregenString << endl;
-                winkelManje.push_back(gekregenString); //Voeg het product toe aan het winkelmandje
-                gekregenString = "hpa" + gekregenString + " is toegevoegd aan uw mandje!"; //Stel de string samen die terugestuurd wordt
-                ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur de string terug
-                ventilator.send("hpaend", strlen("hpaend"));
+                gekregenString = remove(gekregenString);                                    //Verwijder 3 eerste karakters
+                cout << "add " << gekregenString << endl;                                   //Print het commando uit
+                winkelManje.push_back(gekregenString);                                      //Voeg het product toe aan het winkelmandje
+                gekregenString = "hpa" + gekregenString + " is toegevoegd aan uw mandje!";  //Stel de string samen die terugestuurd wordt
+                ventilator.send(gekregenString.c_str(), gekregenString.size());             //Stuur de string terug
+                ventilator.send("hpaend", strlen("hpaend"));                                //Stuur door dat client mag stoppen met luisteren
             }
-            else if(gekregenString[0] == 'g')
+            else if(gekregenString[0] == 'g')                                       //Als er get moet gebeuren
             {
-                cout << "get winkelmanje" << endl;
-                for(int j=0; j<winkelManje.size(); j++)
+                cout << "get winkelmanje" << endl;                                  //Print het commando uit
+                for(int j=0; j<winkelManje.size(); j++)                             //Doe dit evenvaak als de vector groot is
                 {
-                    gekregenString = winkelManje.at(j);
-                    gekregenString = "hpa" + gekregenString;
-                    ventilator.send(gekregenString.c_str(), gekregenString.size());
+                    gekregenString = winkelManje.at(j);                             //Neem het element uit de vector kopieer het in gekregenString
+                    gekregenString = "hpa" + gekregenString;                        //Stel de string samen die tergestuurd wordt
+                    ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur se string door
                 }
-                ventilator.send("hpaend", strlen("hpaend"));
+                ventilator.send("hpaend", strlen("hpaend"));                        //Stuur door dat client mag stoppen met luisteren
             }
-            else if(gekregenString[0] == 'd')
+            else if(gekregenString[0] == 'd')                                   //Als er de moet gebeuren
             {
-                gekregenString = remove(gekregenString); //Verwijder 3 eerste karakters
-                cout << "del " << gekregenString << endl;
-                while(gekregenString != winkelManje.at(i))
-                {
-                    i++;
-                }
-                winkelManje.erase(winkelManje.begin()+i);
-                gekregenString = "hpa" + gekregenString + " is verwijderd";
-                ventilator.send(gekregenString.c_str(), gekregenString.size());
-                ventilator.send("hpaend", strlen("hpaend"));
+                gekregenString = remove(gekregenString);                        //Verwijder 3 eerste karakters
+                cout << "del " << gekregenString << endl;                       //Print het commando uit
+                while(gekregenString != winkelManje.at(i)){i++;}                //Kijk op welke posities het element staat in de vector
+                winkelManje.erase(winkelManje.begin()+i);                       //Verwijder het element op positie i in de vector
+                gekregenString = "hpa" + gekregenString + " is verwijderd";     //Stel de string samen
+                ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur se string door
+                ventilator.send("hpaend", strlen("hpaend"));                    //Stuur door dat client mag stoppen met luisteren
             }
         }
     }
@@ -86,7 +80,7 @@ int main( void )
 }
 
 
-string remove(string removeFrom)
+string remove(string removeFrom) //Een fuctie waarmee steeds de eerste 3 karakters van een string worden verwijderd
 {
     removeFrom.erase(0,3);
     return removeFrom;
