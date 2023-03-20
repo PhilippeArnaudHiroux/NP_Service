@@ -33,7 +33,7 @@ int main(void)
         zmq::message_t * msg = new zmq::message_t(); //Client sub
         while( ventilator.connected() && subscriber.connected())
         {
-            cout << "Geef een tekst in: ";
+            cout << "Geef het commando in: ";
             cin >> data_send;
 
             // Client push
@@ -46,7 +46,7 @@ int main(void)
                 data_ontvangen = remove(data_ontvangen);
                 if(data_ontvangen != "end")
                 {
-                    cout << data_ontvangen << endl;
+                    cout << "    -> " << data_ontvangen << endl;
                 }
             }while(data_ontvangen != "end");
         }

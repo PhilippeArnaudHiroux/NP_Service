@@ -18,8 +18,6 @@ int main( void )
 {
     string subTopic = "pah";
     string gekregenString = "";
-    string sendString = "";
-    string addTekst = " is toegevoegd aan uw mandje!";
     int i = 0;
 
     vector <string> winkelManje;
@@ -47,30 +45,34 @@ int main( void )
             if(gekregenString[0] == 'a')
             {
                 gekregenString = remove(gekregenString); //Verwijder 3 eerste karakters
-                cout << "product: " << gekregenString << endl;
+                cout << "add " << gekregenString << endl;
                 winkelManje.push_back(gekregenString); //Voeg het product toe aan het winkelmandje
-                sendString = "hpa" + gekregenString + addTekst; //Stel de string samen die terugestuurd wordt
-                ventilator.send(sendString.c_str(), sendString.size()); //Stuur de string terug
+                gekregenString = "hpa" + gekregenString + " is toegevoegd aan uw mandje!"; //Stel de string samen die terugestuurd wordt
+                ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur de string terug
                 ventilator.send("hpaend", strlen("hpaend"));
             }
             else if(gekregenString[0] == 'g')
             {
+                cout << "get winkelmanje" << endl;
                 for(int j=0; j<winkelManje.size(); j++)
                 {
-                    string mandjeTerug = winkelManje.at(j);
-                    mandjeTerug = "hpa" + mandjeTerug;
-                    ventilator.send(mandjeTerug.c_str(), mandjeTerug.size());
+                    gekregenString = winkelManje.at(j);
+                    gekregenString = "hpa" + gekregenString;
+                    ventilator.send(gekregenString.c_str(), gekregenString.size());
                 }
                 ventilator.send("hpaend", strlen("hpaend"));
             }
             else if(gekregenString[0] == 'd')
             {
                 gekregenString = remove(gekregenString); //Verwijder 3 eerste karakters
+                cout << "del " << gekregenString << endl;
                 while(gekregenString != winkelManje.at(i))
                 {
                     i++;
                 }
                 winkelManje.erase(winkelManje.begin()+i);
+                gekregenString = "hpa" + gekregenString + " is verwijderd";
+                ventilator.send(gekregenString.c_str(), gekregenString.size());
                 ventilator.send("hpaend", strlen("hpaend"));
             }
         }
