@@ -52,7 +52,6 @@ int main( void )
                 sendString = "hpa" + gekregenString + addTekst; //Stel de string samen die terugestuurd wordt
                 ventilator.send(sendString.c_str(), sendString.size()); //Stuur de string terug
                 ventilator.send("hpaend", strlen("hpaend"));
-                i++; //i++ voor het vecotr aantal te weten
             }
             else if(gekregenString[0] == 'g')
             {
@@ -64,12 +63,16 @@ int main( void )
                 }
                 ventilator.send("hpaend", strlen("hpaend"));
             }
-
-            //Service push
-            /*
-            ventilator.send( "gelukt", strlen("gelukt"));
-            std::cout << "service Push : " << "gelukt" << std::endl;
-            */
+            else if(gekregenString[0] == 'd')
+            {
+                gekregenString = remove(gekregenString); //Verwijder 3 eerste karakters
+                while(gekregenString != winkelManje.at(i))
+                {
+                    i++;
+                }
+                winkelManje.erase(winkelManje.begin()+i);
+                ventilator.send("hpaend", strlen("hpaend"));
+            }
         }
     }
     catch( zmq::error_t & ex )

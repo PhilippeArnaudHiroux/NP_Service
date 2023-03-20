@@ -33,21 +33,21 @@ int main(void)
         zmq::message_t * msg = new zmq::message_t(); //Client sub
         while( ventilator.connected() && subscriber.connected())
         {
-            sleep(1000);
             cout << "Geef een tekst in: ";
             cin >> data_send;
 
             // Client push
             ventilator.send(data_send.c_str(), data_send.size());
-            std::cout << "client push : " << "PAH" << std::endl;
 
             //Client sub
             do{
-            subscriber.recv( msg );
-            data_ontvangen = string( (char*) msg->data(), msg->size() );
-            //std::cout << "Client sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
-            data_ontvangen = remove(data_ontvangen);
-            cout << data_ontvangen << endl;
+                subscriber.recv( msg );
+                data_ontvangen = string( (char*) msg->data(), msg->size() );
+                data_ontvangen = remove(data_ontvangen);
+                if(data_ontvangen != "end")
+                {
+                    cout << data_ontvangen << endl;
+                }
             }while(data_ontvangen != "end");
         }
     }
