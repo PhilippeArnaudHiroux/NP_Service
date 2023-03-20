@@ -12,6 +12,8 @@ using namespace std;
 
 int main( void )
 {
+
+
     try
     {
         zmq::context_t context(1);
@@ -26,16 +28,12 @@ int main( void )
         zmq::message_t * msg = new zmq::message_t();
         while( subscriber.connected() && ventilator.connected() )
         {
-            sleep(1000);
             //Service sub
             subscriber.recv( msg );
-            sleep(1000);
             std::cout << "Service sub : [" << std::string( (char*) msg->data(), msg->size() ) << "]" << std::endl;
-            sleep(1000);
 
             //Service push
             ventilator.send( "gelukt", strlen("gelukt"));
-            sleep(1000);
             std::cout << "service Push : " << "gelukt" << std::endl;
         }
     }
