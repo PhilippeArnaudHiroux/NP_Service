@@ -13,6 +13,7 @@
 using namespace std;
 
 string remove(string removeFrom);
+string removeOnbekend(string removeFrom);
 
 int main( void )
 {
@@ -69,6 +70,14 @@ int main( void )
                 ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur se string door
                 ventilator.send("hpaend", strlen("hpaend"));                    //Stuur door dat client mag stoppen met luisteren
             }
+            else
+            {
+                gekregenString = removeOnbekend(gekregenString);
+                cout << gekregenString << " is geen commando" << endl;
+                gekregenString = "hpa" + gekregenString + " onbekend comando";     //Stel de string samen
+                ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur se string door
+                ventilator.send("hpaend", strlen("hpaend"));                    //Stuur door dat client mag stoppen met luisteren
+            }
         }
     }
     catch( zmq::error_t & ex )
@@ -83,5 +92,11 @@ int main( void )
 string remove(string removeFrom) //Een fuctie waarmee steeds de eerste 3 karakters van een string worden verwijderd
 {
     removeFrom.erase(0,3);
+    return removeFrom;
+}
+
+string removeOnbekend(string removeFrom) //Een fuctie waarmee steeds de eerste 3 karakters van een string worden verwijderd
+{
+    removeFrom.erase(3,removeFrom.size());
     return removeFrom;
 }
