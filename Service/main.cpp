@@ -13,11 +13,12 @@
 using namespace std;
 
 string remove(string removeFrom);
-string removeOnbekend(string removeFrom);
+string takeFirstThree(string removeFrom);
 
 int main( void )
 {
     string gekregenString = "";
+    string firstThree  ="";
     int i = 0;
 
     vector <string> winkelManje;
@@ -39,8 +40,9 @@ int main( void )
             subscriber.recv( msg );                                     //Ontvang het bericht
             gekregenString = string((char*) msg->data(), msg->size());  //Vorm ontvangen data om naar een string
             gekregenString = remove(gekregenString);                    //Verwijder de eerste 3 karakters van de string (sub topic)
+            firstThree = takeFirstThree(gekregenString);
 
-            if(gekregenString[0] == 'a')                                                    //Als er add moet gebeuren
+            if(firstThree == "add")                                                    //Als er add moet gebeuren
             {
                 gekregenString = remove(gekregenString);                                    //Verwijder 3 eerste karakters
                 cout << "add " << gekregenString << endl;                                   //Print het commando uit
@@ -49,7 +51,7 @@ int main( void )
                 ventilator.send(gekregenString.c_str(), gekregenString.size());             //Stuur de string terug
                 ventilator.send("hpaend", strlen("hpaend"));                                //Stuur door dat client mag stoppen met luisteren
             }
-            else if(gekregenString[0] == 'g')                                       //Als er get moet gebeuren
+            else if(firstThree == "get")                                       //Als er get moet gebeuren
             {
                 cout << "get winkelmanje" << endl;                                  //Print het commando uit
                 for(int j=0; j<winkelManje.size(); j++)                             //Doe dit evenvaak als de vector groot is
@@ -60,7 +62,7 @@ int main( void )
                 }
                 ventilator.send("hpaend", strlen("hpaend"));                        //Stuur door dat client mag stoppen met luisteren
             }
-            else if(gekregenString[0] == 'd')                                   //Als er de moet gebeuren
+            else if(firstThree == "del")                                   //Als er del moet gebeuren
             {
                 gekregenString = remove(gekregenString);                        //Verwijder 3 eerste karakters
                 cout << "del " << gekregenString << endl;                       //Print het commando uit
@@ -72,7 +74,7 @@ int main( void )
             }
             else
             {
-                gekregenString = removeOnbekend(gekregenString);
+                gekregenString = takeFirstThree(gekregenString);
                 cout << gekregenString << " is geen commando" << endl;
                 gekregenString = "hpa" + gekregenString + " onbekend comando";     //Stel de string samen
                 ventilator.send(gekregenString.c_str(), gekregenString.size()); //Stuur se string door
@@ -95,7 +97,7 @@ string remove(string removeFrom) //Een fuctie waarmee steeds de eerste 3 karakte
     return removeFrom;
 }
 
-string removeOnbekend(string removeFrom) //Een fuctie waarmee steeds de eerste 3 karakters van een string worden verwijderd
+string takeFirstThree(string removeFrom) //Een fuctie waarmee de eerste 3 karakters van een string worden behouden
 {
     removeFrom.erase(3,removeFrom.size());
     return removeFrom;
