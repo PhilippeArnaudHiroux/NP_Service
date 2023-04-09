@@ -47,7 +47,7 @@ int main( void )
             {
                 cout << "add " << theProduct << endl;                               //Print out the text
                 shopBag.push_back(theProduct);                                      //Add the product to the shopBag
-                sendString = "hpa" + theProduct + " is toegevoegd aan uw mandje!";  //Create the string that will be send back
+                sendString = "shop?" + theProduct + " is toegevoegd aan uw mandje!";  //Create the string that will be send back
                 ventilator.send(sendString.c_str(), sendString.size());             //Send the string
             }
             else if(firstThree == "get")                                    //If get
@@ -56,7 +56,7 @@ int main( void )
                 for(int j=0; j<shopBag.size(); j++)                         //Do this as many times as the vector is large
                 {
                     theProduct = shopBag.at(j);                             //Take the element from the vector and copy it into theProduct
-                    sendString = "hpa" + theProduct;                        //Create the string that will be send back
+                    sendString = "shop?" + theProduct;                        //Create the string that will be send back
                     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
                 }
             }
@@ -65,17 +65,17 @@ int main( void )
                 cout << "del " << theProduct << endl;                   //Print out the text
                 while(theProduct != shopBag.at(i)){i++;}                //Look at which positions the element is in the vector
                 shopBag.erase(shopBag.begin()+i);                       //Remove the element at position i in the vector
-                sendString = "hpa" + theProduct + " is verwijderd";     //Create the string that will be send back
+                sendString = "shop?" + theProduct + " is verwijderd";     //Create the string that will be send back
                 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
             }
             else
             {
                 cout << firstThree << " is geen commando" << endl;      //Print out the text
-                sendString = "hpa" + firstThree + " onbekend comando";  //Create the string that will be send back
+                sendString = "shop?" + firstThree + " onbekend comando";  //Create the string that will be send back
                 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
             }
 
-            ventilator.send("hpaend", strlen("hpaend"));    //Forward that client may stop listening
+            ventilator.send("shop?end", strlen("shop?end"));    //Forward that client may stop listening
         }
     }
     catch( zmq::error_t & ex )
