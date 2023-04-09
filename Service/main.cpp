@@ -43,20 +43,20 @@ int main( void )
             firstThree.erase(3,firstThree.size());                      //Remove everything after the first 3 characters
             theProduct.erase(0, 3);                                     //Remove the first 3 characters
 
-            if(firstThree == "add")                                                 //If add
+            if(firstThree == "add")                                                     //If add
             {
-                cout << "add " << theProduct << endl;                               //Print out the text
-                shopBag.push_back(theProduct);                                      //Add the product to the shopBag
-                sendString = "shop?" + theProduct + " is toegevoegd aan uw mandje!";  //Create the string that will be send back
-                ventilator.send(sendString.c_str(), sendString.size());             //Send the string
+                cout << "add " << theProduct << endl;                                   //Print out the text
+                shopBag.push_back(theProduct);                                          //Add the product to the shopBag
+                sendString = "shop?" + theProduct + " has been added to your basket!";  //Create the string that will be send back
+                ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
             }
             else if(firstThree == "get")                                    //If get
             {
-                cout << "get winkelmanje" << endl;                          //Print out the text
+                cout << "get shopBag" << endl;                              //Print out the text
                 for(int j=0; j<shopBag.size(); j++)                         //Do this as many times as the vector is large
                 {
                     theProduct = shopBag.at(j);                             //Take the element from the vector and copy it into theProduct
-                    sendString = "shop?" + theProduct;                        //Create the string that will be send back
+                    sendString = "shop?" + theProduct;                      //Create the string that will be send back
                     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
                 }
             }
@@ -65,13 +65,13 @@ int main( void )
                 cout << "del " << theProduct << endl;                   //Print out the text
                 while(theProduct != shopBag.at(i)){i++;}                //Look at which positions the element is in the vector
                 shopBag.erase(shopBag.begin()+i);                       //Remove the element at position i in the vector
-                sendString = "shop?" + theProduct + " is verwijderd";     //Create the string that will be send back
+                sendString = "shop?" + theProduct + " is removed";      //Create the string that will be send back
                 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
             }
             else
             {
-                cout << firstThree << " is geen commando" << endl;      //Print out the text
-                sendString = "shop?" + firstThree + " onbekend comando";  //Create the string that will be send back
+                cout << firstThree << " is not a command" << endl;      //Print out the text
+                sendString = "shop?" + firstThree + " unknown command"; //Create the string that will be send back
                 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
             }
 
