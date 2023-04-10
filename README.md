@@ -26,9 +26,8 @@ Also the client and service need to listen at different subjects. Otherwise they
 
 # Commandos
 ## add
-## get
-## del
 <pre>
+```cpp
 if(firstThree == "add")                                                     //If add
 {
     cout << "add " << theProduct << endl;                                   //Print out the text
@@ -36,7 +35,25 @@ if(firstThree == "add")                                                     //If
     sendString = "shop?" + theProduct + " has been added to your basket!";  //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
 }
+```
 </pre>
-![add](image/add.JPG)
+## get
+<pre>
+```cpp
+else if(firstThree == "get")                                    //If get
+{
+    cout << "get shopBag" << endl;                              //Print out the text
+    for(int j=0; j<shopBag.size(); j++)                         //Do this as many times as the vector is large
+    {
+                    theProduct = shopBag.at(j);                             //Take the element from the vector and copy it into theProduct
+                    sendString = "shop?" + theProduct;                      //Create the string that will be send back
+                    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+                }
+            }
+```
+</pre>
+## del
 ## Example
 ![Example](image/example.JPG)
+
+```cpp
