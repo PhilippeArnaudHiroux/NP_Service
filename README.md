@@ -28,8 +28,13 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## add
 ## get
 ## del
-- [x] Write a blog
-- [x] Make it interesting
-- [ ] Publish it
+'''c++
+if(firstThree == "add")                                                     //If add
+            {
+                cout << "add " << theProduct << endl;                                   //Print out the text
+                shopBag.push_back(theProduct);                                          //Add the product to the shopBag
+                sendString = "shop?" + theProduct + " has been added to your basket!";  //Create the string that will be send back
+                ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
+            }
 ## Example
 ![Example](image/example.JPG)
