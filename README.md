@@ -26,7 +26,7 @@ Also the client and service need to listen at different subjects. Otherwise they
 
 # Commandos
 ## add
-https://github.com/PhilippeArnaudHiroux/NP_Service/blob/main/Client/main.cpp#:~:text=zmq%3A%3Asocket_t%20ventilator(%20context%2C%20ZMQ_PUSH%20)%3B%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20//Client%20push
+https://github.com/PhilippeArnaudHiroux/NP_Service/blob/main/Client/main.cpp#:~:text=zmq%3A%3Asocket_t%20ventilator,)%20)%3B%20%20%20//Client%20sub
 ## get
 ## del
 
