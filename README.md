@@ -29,8 +29,13 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## get
 ## del
 <pre>
-'''cpp
-https://github.com/PhilippeArnaudHiroux/NP_Service/blob/main/Service/main.cpp#:~:text=if(firstThree%20%3D%3D%20%22add,%7D)
+if(firstThree == "add")                                                     //If add
+{
+    cout << "add " << theProduct << endl;                                   //Print out the text
+    shopBag.push_back(theProduct);                                          //Add the product to the shopBag
+    sendString = "shop?" + theProduct + " has been added to your basket!";  //Create the string that will be send back
+    ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
+}
 </pre>
 ## Example
 ![Example](image/example.JPG)
