@@ -28,7 +28,7 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## add
 ## get
 ## del
-'''c++
+'''cpp
 if(firstThree == "add")                                                     //If add
             {
                 cout << "add " << theProduct << endl;                                   //Print out the text
