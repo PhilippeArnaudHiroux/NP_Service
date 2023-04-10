@@ -37,5 +37,6 @@ if(firstThree == "add")                                                     //If
     ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
 }
 </pre>
+![add](image/add.JPG)
 ## Example
 ![Example](image/example.JPG)
