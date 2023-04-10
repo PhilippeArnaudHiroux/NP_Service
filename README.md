@@ -1,5 +1,7 @@
 # NP_Service
-<p>In this readme you will find more information about the network service. It explains how the communication between the client and service works and how the program itself works.</p>
+<p>In this readme you will find more information about the network service. It explains how the communication between the client and service works and how the program itself works.<br><br>
+
+The program is written in [QT Creator](https://www.qt.io/product/development-tools), and the flowcharts are made on the website [miro.com](https://miro.com/templates/flowcharts/)</p>
 
 # Communication
 <p>In this project there are three applications: the client, benternet and the service.<br>
