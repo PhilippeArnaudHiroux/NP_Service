@@ -94,7 +94,7 @@ void get(string product, vector <string> bag, string push, string id)
     string sendString = "";
 
     cout << "get shopBag by " << id << endl;                              //Print out the text
-    for(int j=0; j<bag.size(); j++)                         //Do this as many times as the vector is large
+    for(int j=0; bag.size()>j; j++)                         //Do this as many times as the vector is large
     {
         product = bag.at(j);                             //Take the element from the vector and copy it into theProduct
         sendString = push + id + product;                      //Create the string that will be send back
