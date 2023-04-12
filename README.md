@@ -60,18 +60,67 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## Flowchart
 ![Flowchart](image/flowchart.JPG)
 
+
+
+# Command
+## add
 <pre><code>
 vector <string> add(string product, vector <string> bag, string push, string id)
+{
+    zmq::context_t context(1);
+    zmq::socket_t ventilator( context, ZMQ_PUSH );                        //Service push
+    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );          //Service push
+    string sendString = "";
+
+    cout << "add " << product << " by " << id << endl;                     //Print out the text
+    bag.push_back(product);                                                //Add the product to the shopBag
+    sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
+    ventilator.send(sendString.c_str(), sendString.size());                //Send the string
+
+    sendString = push + id + "end";
+    ventilator.send(sendString.c_str(), sendString.size());                //Forward that client may stop listening
+
+    return bag;
+}
+</code></pre>
+
+## get
+<pre><code>
+void get(string product, vector <string> bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
     string sendString = "";
 
-    cout << "add " << product << " by " << id << endl;                                   //Print out the text
-    bag.push_back(product);                                          //Add the product to the shopBag
-    sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
+    cout << "get shopBag by " << id << endl;                              //Print out the text
+    for(int j=0; j<bag.size(); j++)                         //Do this as many times as the vector is large
+    {
+        product = bag.at(j);                             //Take the element from the vector and copy it into theProduct
+        sendString = push + id + product;                      //Create the string that will be send back
+        ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+    }
+
+    sendString = push + id + "end";
+    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
+}
+</code></pre>
+
+## del
+<pre><code>
+vector <string> del(string product, vector <string> bag, string push, string id)
+{
+    zmq::context_t context(1);
+    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
+    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
+    string sendString = "";
+
+    int i = 0;
+    cout << "del " << product << " by " << id << endl;                   //Print out the text
+    while(product != bag.at(i)){i++;}                //Look at which positions the element is in the vector
+    bag.erase(bag.begin()+i);                       //Remove the element at position i in the vector
+    sendString = push + id + product + " is removed";      //Create the string that will be send back
+    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 
     sendString = push + id + "end";
     ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
@@ -79,14 +128,6 @@ vector <string> add(string product, vector <string> bag, string push, string id)
     return bag;
 }
 </code></pre>
-
-# Command
-## add
-![add](image/add.JPG)
-## get
-![get](image/get.JPG)
-## del
-![del](image/del.JPG)
 
 ## Example
 ![Example](image/example.JPG)
