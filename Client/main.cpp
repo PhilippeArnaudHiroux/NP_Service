@@ -27,7 +27,6 @@ int main(void)
     int groote = (rand() % 5) +5;
     for(int i=0; i<groote; i++)
     {
-        //cout << char('A' + rand() % 26);
         shopID = shopID + char('A' + rand() % 26);
     }
 

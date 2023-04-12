@@ -60,10 +60,35 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## Flowchart
 ![Flowchart](image/flowchart.JPG)
 
+# Code from client and service
+In this part he code from both application will be explained.
 
+## Client
+### 1. Generate **shopID**
+First the code will generate his own **shopID**.
+<pre><code>
+int groote = (rand() % 5) +5;
+for(int i=0; groote>i; i++)
+{
+    shopID = shopID + char('A' + rand() % 26);
+}
 
-# Command
-## add
+cout << shopID << endl;
+</code></pre>
+
+### 2. Create **sendString** and **send** it
+The application wil first ask to type your **command** and **product**. Afhter this it will add all strings together to one string.<br>
+When the string is created, the whole string will be send with **ventilator.send(...)**.
+<pre><code>
+cout << "Enter the command: ";                          //Print out the text
+cin >> sendString;                                      //Let the user type in a command
+sendString = pushSubject + shopID + sendString;
+ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+</code></pre>
+
+## Service
+### 3. Command
+### add
 <pre><code>
 vector <string> add(string product, vector <string> bag, string push, string id)
 {
@@ -84,7 +109,7 @@ vector <string> add(string product, vector <string> bag, string push, string id)
 }
 </code></pre>
 
-## get
+### get
 <pre><code>
 void get(string product, vector <string> bag, string push, string id)
 {
@@ -106,7 +131,7 @@ void get(string product, vector <string> bag, string push, string id)
 }
 </code></pre>
 
-## del
+### del
 <pre><code>
 vector <string> del(string product, vector <string> bag, string push, string id)
 {
