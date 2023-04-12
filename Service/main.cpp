@@ -83,5 +83,7 @@ int main( void )
         std::cerr << "Caught an exception : " << ex.what();
     }
 
+    new vector <string> test;
+
     return 0;
 }
