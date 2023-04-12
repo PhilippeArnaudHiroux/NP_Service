@@ -5,6 +5,8 @@
 #include <vector>
 #include <regex>
 #include <fstream>
+#include <Windows.h>
+#include <cstdio>
 
 #ifndef _WIN32
     #include <unistd.h>
@@ -17,15 +19,16 @@ using namespace std;
 vector <string> add(string product, vector <string> bag, string push, string id);
 void get(string product, vector <string> bag, string push, string id);
 vector <string> del(string product, vector <string> bag, string push, string id);
+void cut(string push,string id);
 void unknownCommand(string three, string push, string id);
-void makeTXTfile(vector <string> bag,string id);
+vector <string> readTXTfile(string id);
+void writeTXTfile(vector <string> bag,string id);
 string delUppChar(string str);
 string delLowChar(string str);
 
 int main( void )
 {
     string receivedString = ""; //In this string the received messages will be stored
-    string sendString =  "";     //In this string the messages will be stored that will be send
     string firstThree  = "";     //In this string will be the command stored
     string theProduct =  "";     //In this string will be the product stored
     string pushSubject = "shop?";
@@ -60,6 +63,7 @@ int main( void )
             if(shopIDvector.size()==0)
             {
                 shopIDvector.push_back(shopID);
+                cout << "new customer by " << shopID << endl;
             }
             else
             {
@@ -67,18 +71,13 @@ int main( void )
                 {
                     if(shopID == shopIDvector.at(k))
                     {
-                        ifstream txtFile("../txt_files/" + shopID + ".txt");
-                        string prouct;
-                        while(getline(txtFile, prouct))
-                        {
-                            shopBag.push_back(prouct);
-                        } // add each number to the vector
-                        txtFile.close();
+                        shopBag = readTXTfile(shopID);
                         break;
                     }
                     else
                     {
                         shopIDvector.push_back(shopID);
+                        cout << "new customer by " << shopID << endl;
                     }
                 }
             }
@@ -95,12 +94,16 @@ int main( void )
             {
                 shopBag = del(theProduct, shopBag, pushSubject, shopID);
             }
+            else if(firstThree == "cut")
+            {
+                cut(pushSubject, shopID);
+            }
             else
             {
                 unknownCommand(firstThree, pushSubject, shopID);
             }
 
-            makeTXTfile(shopBag, shopID);
+            writeTXTfile(shopBag, shopID);
             shopBag.clear();
         }
     }
@@ -115,7 +118,7 @@ vector <string> add(string product, vector <string> bag, string push, string id)
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
     string sendString = "";
 
-    cout << "add " << product << endl;                                   //Print out the text
+    cout << "add " << product << " by " << id << endl;                                   //Print out the text
     bag.push_back(product);                                          //Add the product to the shopBag
     sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
@@ -133,7 +136,7 @@ void get(string product, vector <string> bag, string push, string id)
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
     string sendString = "";
 
-    cout << "get shopBag" << endl;                              //Print out the text
+    cout << "get shopBag by " << id << endl;                              //Print out the text
     for(int j=0; j<bag.size(); j++)                         //Do this as many times as the vector is large
     {
         product = bag.at(j);                             //Take the element from the vector and copy it into theProduct
@@ -153,7 +156,7 @@ vector <string> del(string product, vector <string> bag, string push, string id)
     string sendString = "";
 
     int i = 0;
-    cout << "del " << product << endl;                   //Print out the text
+    cout << "del " << product << " by " << id << endl;                   //Print out the text
     while(product != bag.at(i)){i++;}                //Look at which positions the element is in the vector
     bag.erase(bag.begin()+i);                       //Remove the element at position i in the vector
     sendString = push + id + product + " is removed";      //Create the string that will be send back
@@ -165,6 +168,23 @@ vector <string> del(string product, vector <string> bag, string push, string id)
     return bag;
 }
 
+void cut(string push, string id)
+{
+    zmq::context_t context(1);
+    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
+    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
+    string sendString = "";
+
+    std::ofstream txtFile("../txt_files/" + id + ".txt", std::ofstream::out | std::ofstream::trunc);
+    txtFile.close();
+
+    sendString = push + id + " bag is removed";      //Create the string that will be send back
+    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+
+    sendString = push + id + "end";
+    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
+}
+
 void unknownCommand(string three, string push, string id)
 {
     zmq::context_t context(1);
@@ -172,7 +192,7 @@ void unknownCommand(string three, string push, string id)
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
     string sendString = "";
 
-    cout << three << " is not a command" << endl;      //Print out the text
+    cout << three << " unknown command by " << id << endl;      //Print out the text
     sendString = push + id + three + " unknown command"; //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 
@@ -180,12 +200,22 @@ void unknownCommand(string three, string push, string id)
     ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
 }
 
-void makeTXTfile(vector <string> bag,string id)
+vector <string> readTXTfile(string id)
+{
+    vector <string> bag;
+    ifstream txtFile("../txt_files/" + id + ".txt");
+    string prouct;
+    while(getline(txtFile, prouct)){bag.push_back(prouct);}
+    txtFile.close();
+
+    return bag;
+}
+
+void writeTXTfile(vector <string> bag,string id)
 {
     ofstream txtFile("../txt_files/" + id + ".txt", ios::out);
     for (int j = 0; j<bag.size(); j++){txtFile << bag.at(j) << "\n";} // write each element of the vector to the file
     txtFile.close();
-    //bag.clear();
 }
 
 string delUppChar(string str)
