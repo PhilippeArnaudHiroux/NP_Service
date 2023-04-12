@@ -75,3 +75,5 @@ CMakeLists.txt.user*
 # Ignore folders with the word build in it
 **/*build*/
 
+**/*txt*/
+
