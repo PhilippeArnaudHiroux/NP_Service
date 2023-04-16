@@ -60,15 +60,18 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## Flowchart
 ![Flowchart](image/flowchart.JPG)
 
+## Example
+![Example](image/example.JPG)
+
 # Code from client and service
-In this part he code from both application will be explained.
+In this part the code from both application will be explained.
 
 ## Client
-### 1. Generate **shopID**
+### 1. Generate shopID
 First the code will generate his own **shopID**.
 <pre><code>
-int groote = (rand() % 5) +5;
-for(int i=0; groote>i; i++)
+int size = (rand() % 5) +5;
+for(int i=0; size>i; i++)
 {
     shopID = shopID + char('A' + rand() % 26);
 }
@@ -76,7 +79,7 @@ for(int i=0; groote>i; i++)
 cout << shopID << endl;
 </code></pre>
 
-### 2. Create **sendString** and **send** it
+### 2. send messages
 The application wil first ask to type your **command** and **product**. Afhter this it will add all strings together to one string.<br>
 When the string is created, the whole string will be send with **ventilator.send(...)**.
 <pre><code>
@@ -84,6 +87,23 @@ cout << "Enter the command: ";                          //Print out the text
 cin >> sendString;                                      //Let the user type in a command
 sendString = pushSubject + shopID + sendString;
 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+</code></pre>
+
+### 3. recv messages
+When the client has send his messages, it will start lissening to incoming messages. Once it has received a messages, it will rebuild this messages to a string.<br>
+Then the first five characters of the string will be removed (shop?).<br>
+The client application will keep lissening until it received the messages **end**. When it received the messages **end**, the code will go back to "send messages" part.
+<pre><code>
+do{
+    subscriber.recv(msg);                                           //Receive the message
+    receivedString  = string( (char*) msg->data(), msg->size() );   //Convert the received message to a string
+    receivedString.erase(0, 5);                                     //Remove the first 5 characters of the string (sub topic)
+    if(receivedString  != "end")                                    //If not end
+    {
+        receivedString = delUppChar(receivedString);
+        cout << "    -> " << receivedString  << endl;               //Print out the text
+    }
+}while(receivedString  != "end");                                   //As long as the end command is not received
 </code></pre>
 
 ## Service
@@ -154,5 +174,4 @@ vector <string> del(string product, vector <string> bag, string push, string id)
 }
 </code></pre>
 
-## Example
-![Example](image/example.JPG)
+
