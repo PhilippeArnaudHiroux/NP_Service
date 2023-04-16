@@ -158,6 +158,7 @@ else
 
 ### 3. Command
 ### add
+In the add function, the product will be add to the **bag** vector. The function will also send a message back to the client, and the **end** message.
 <pre><code>
 vector <string> add(string product, vector <string> bag, string push, string id)
 {
@@ -179,6 +180,7 @@ vector <string> add(string product, vector <string> bag, string push, string id)
 </code></pre>
 
 ### get
+With the get function the service will send each element of the **bag** vector to the client. At the end it will also send the **end** message.
 <pre><code>
 void get(string product, vector <string> bag, string push, string id)
 {
@@ -201,6 +203,7 @@ void get(string product, vector <string> bag, string push, string id)
 </code></pre>
 
 ### del
+The del function will delete the product out of the **bag** vector. Also here will the **end** message be send to the client.
 <pre><code>
 vector <string> del(string product, vector <string> bag, string push, string id)
 {
