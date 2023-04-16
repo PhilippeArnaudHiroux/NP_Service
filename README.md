@@ -128,6 +128,34 @@ firstThree.erase(3,firstThree.size());                      //Remove everything 
 theProduct.erase(0, 3);                                     //Remove the first 3 characters
 </code></pre>
 
+### 2. Check shopID
+When you start the program, the **shopIDvector** will be empty. So the first time the programming runs, the **shopID** will be add to the vector.<br>
+Every other time the program will first check if the **shopID** is already add into the **shopIDvector**. If the ID is in the vector, the function **readTXTfile** will read out the txt file and push_back everyting in to a vector.<br>
+Else the **shopID** will be add to the **shopIDvector**.
+<pre><code>
+if(shopIDvector.size()==0)
+{
+    shopIDvector.push_back(shopID);
+    cout << "new customer by " << shopID << endl;
+}
+else
+{
+    for(int k=0; shopIDvector.size()>k; k++)
+    {
+        if(shopID == shopIDvector.at(k))
+        {
+            shopBag = readTXTfile(shopID);
+            break;
+        }
+        else
+        {
+            shopIDvector.push_back(shopID);
+            cout << "new customer by " << shopID << endl;
+        }
+    }
+}
+</code></pre>
+
 ### 3. Command
 ### add
 <pre><code>
