@@ -107,6 +107,27 @@ do{
 </code></pre>
 
 ## Service
+### 1. Recv message
+The first thing that the service will do is lissening to incoming messages. Once it has received a messages, it will rebuild this messages to a string.<br>
+Also here the first 5 characters will be removed from the string (shop!).<br>
+The next step is to separate the string in different parts. The first part is the **shopID**, with the function **delLowChar** we can remove the lowercase chars from the string.<br>
+The second part are all the lowercase chars. By using the function **delUppChar** we can remove all the uppercase chars from the string.<br>
+At the end we will create the **firstThree** sting by remving all the chars afther the first three chars, and the **theProduct** string by removing the first three chars.<br>
+Afhter all these steps we have 3 strings to work with:
+* shopID
+* firsthree
+* theProduct
+<pre><code>
+subscriber.recv(msg);                                       //Receive the message
+receivedString = string((char*) msg->data(), msg->size());  //Convert the received message to a string
+receivedString.erase(0,5);                                  //Remove the first 5 characters of the string (sub topic)
+shopID = delLowChar(receivedString);
+firstThree = delUppChar(receivedString);                                //Set firstThree equal to receivedString
+theProduct = delUppChar(receivedString);                                //Set theProduct equal to receivedString
+firstThree.erase(3,firstThree.size());                      //Remove everything after the first 3 characters
+theProduct.erase(0, 3);                                     //Remove the first 3 characters
+</code></pre>
+
 ### 3. Command
 ### add
 <pre><code>
