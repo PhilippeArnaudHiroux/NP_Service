@@ -158,7 +158,7 @@ else
 
 ### 3. Command
 ### add
-In the add function, the product will be add to the **bag** vector. The function will also send a message back to the client, and the **end** message.
+In the add function, the product will be add to the **shopBag** vector. The function will also send a message back to the client, and the **end** message.
 <pre><code>
 vector <string> add(string product, vector <string> bag, string push, string id)
 {
@@ -180,7 +180,7 @@ vector <string> add(string product, vector <string> bag, string push, string id)
 </code></pre>
 
 ### get
-With the get function the service will send each element of the **bag** vector to the client. At the end it will also send the **end** message.
+With the get function the service will send each element of the **shopBag** vector to the client. At the end it will also send the **end** message.
 <pre><code>
 void get(string product, vector <string> bag, string push, string id)
 {
@@ -203,7 +203,7 @@ void get(string product, vector <string> bag, string push, string id)
 </code></pre>
 
 ### del
-The del function will delete the product out of the **bag** vector. Also here will the **end** message be send to the client.
+The del function will delete the product out of the **shopBag** vector. Also here will the **end** message be send to the client.
 <pre><code>
 vector <string> del(string product, vector <string> bag, string push, string id)
 {
@@ -226,4 +226,20 @@ vector <string> del(string product, vector <string> bag, string push, string id)
 }
 </code></pre>
 
+## Make txt file
+When the product are add or delete out of the **shopBag** vector. the function **writeTXTfile** will overwrite the txt file with the right **shopID**.
+<pre><code>
+vector <string> bag;
+ifstream txtFile("../txt_files/" + id + ".txt");
+string prouct;
+while(getline(txtFile, prouct)){bag.push_back(prouct);}
+txtFile.close();
 
+return bag;
+</code></pre>
+
+## Clear vector
+At the end the **shopBag** will be cleared so its ready to use again.
+<pre><code>
+shopBag.clear();
+</code></pre>
