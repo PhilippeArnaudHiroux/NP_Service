@@ -71,7 +71,7 @@ In this part the code from both application will be explained.
 First the code will generate his own **shopID**.
 <pre><code>
 int size = (rand() % 5) +5;
-for(int i=0; size>i; i++)
+for(int i=0; i&lt;size; i++)
 {
     shopID = shopID + char('A' + rand() % 26);
 }
@@ -140,7 +140,7 @@ if(shopIDvector.size()==0)
 }
 else
 {
-    for(int k=0; shopIDvector.size()>k; k++)
+    for(int k=0; k&lt;shopIDvector.size(); k++)
     {
         if(shopID == shopIDvector.at(k))
         {
@@ -160,7 +160,7 @@ else
 ### add
 In the add function, the product will be add to the **shopBag** vector. The function will also send a message back to the client, and the **end** message.
 <pre><code>
-vector <string> add(string product, vector <string> bag, string push, string id)
+vector &lt;string&gt; add(string product, vector &lt;string&gt; bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                        //Service push
@@ -182,7 +182,7 @@ vector <string> add(string product, vector <string> bag, string push, string id)
 ### get
 With the get function the service will send each element of the **shopBag** vector to the client. At the end it will also send the **end** message.
 <pre><code>
-void get(string product, vector <string> bag, string push, string id)
+void get(string product, vector &lt;string&gt; bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
@@ -205,7 +205,7 @@ void get(string product, vector <string> bag, string push, string id)
 ### del
 The del function will delete the product out of the **shopBag** vector. Also here will the **end** message be send to the client.
 <pre><code>
-vector <string> del(string product, vector <string> bag, string push, string id)
+vector &lt;string&gt; del(string product, vector &lt;string&lt; bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
@@ -229,7 +229,7 @@ vector <string> del(string product, vector <string> bag, string push, string id)
 ## Make txt file
 When the product are add or delete out of the **shopBag** vector. the function **writeTXTfile** will overwrite the txt file with the right **shopID**.
 <pre><code>
-vector <string> bag;
+vector &lt;string&gt; bag;
 ifstream txtFile("../txt_files/" + id + ".txt");
 string prouct;
 while(getline(txtFile, prouct)){bag.push_back(prouct);}
