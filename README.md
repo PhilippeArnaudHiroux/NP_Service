@@ -205,7 +205,7 @@ void get(string product, vector &lt;string&gt; bag, string push, string id)
 ### del
 The del function will delete the product out of the **shopBag** vector. Also here will the **end** message be send to the client.
 <pre><code>
-vector &lt;string&gt; del(string product, vector &lt;string&lt; bag, string push, string id)
+vector &lt;string&gt; del(string product, vector &lt;string&gt; bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
