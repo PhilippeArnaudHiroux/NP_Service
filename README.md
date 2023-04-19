@@ -50,7 +50,7 @@ The messages that the client send is build up with 3 parts. Sometimes there is a
 * additional text: In some cases there is additional text so the user knows what happend.
 * example:
     * shop?AGHIKLBDYaddpizza has been added to basket!
-    * shop?LKJDFJLDmilk is removed!
+    * shop?LKJDFJLUdelmilk is removed!
     * ...
 
 ## Conclusion
