@@ -226,7 +226,7 @@ vector &lt;string&gt; del(string product, vector &lt;string&gt; bag, string push
 }
 </code></pre>
 
-## Make txt file
+## 4. Make txt file
 When the product are add or delete out of the **shopBag** vector. the function **writeTXTfile** will overwrite the txt file with the right **shopID**.
 <pre><code>
 vector &lt;string&gt; bag;
@@ -238,7 +238,7 @@ txtFile.close();
 return bag;
 </code></pre>
 
-## Clear vector
+## 5. Clear vector
 At the end the **shopBag** will be cleared so its ready to use again.
 <pre><code>
 shopBag.clear();
