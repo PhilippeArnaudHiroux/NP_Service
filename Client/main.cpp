@@ -53,16 +53,16 @@ int main(void)
             sendString = pushSubject + shopID + sendString;
             ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 
-            do{
+            //do{
                 subscriber.recv(msg);                                           //Receive the message
                 receivedString  = string( (char*) msg->data(), msg->size() );   //Convert the received message to a string
                 receivedString.erase(0, 5);                                     //Remove the first 5 characters of the string (sub topic)
-                if(receivedString  != "end")                                    //If not end
-                {
+                //if(receivedString  != "end")                                    //If not end
+                //{
                     receivedString = delUppChar(receivedString);
                     cout << "    -> " << receivedString  << endl;               //Print out the text
-                }
-            }while(receivedString  != "end");                                   //As long as the end command is not received
+                //}
+            //}while(receivedString  != "end");                                   //As long as the end command is not received
         }
     }
     catch( zmq::error_t & ex )

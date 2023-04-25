@@ -17,7 +17,7 @@
 
 using namespace std;
 vector <string> add(string product, vector <string> bag, string push, string id);
-void get(string product, vector <string> bag, string push, string id);
+void get(vector <string> bag, string push, string id);
 vector <string> del(string product, vector <string> bag, string push, string id);
 void cut(string push,string id);
 void unknownCommand(string three, string push, string id);
@@ -88,7 +88,7 @@ int main( void )
             }
             else if(firstThree == "get")                                    //If get
             {
-                get(theProduct, shopBag, pushSubject, shopID);
+                get(shopBag, pushSubject, shopID);
             }
             else if(firstThree == "del")                                //If del
             {
@@ -123,29 +123,32 @@ vector <string> add(string product, vector <string> bag, string push, string id)
     sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
 
-    sendString = push + id + "end";
-    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
-
     return bag;
 }
 
-void get(string product, vector <string> bag, string push, string id)
+void get(vector <string> bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
+    string products = "";
     string sendString = "";
 
     cout << "get shopBag by " << id << endl;                              //Print out the text
-    for(int j=0; bag.size()>j; j++)                         //Do this as many times as the vector is large
-    {
-        product = bag.at(j);                             //Take the element from the vector and copy it into theProduct
-        sendString = push + id + product;                      //Create the string that will be send back
-        ventilator.send(sendString.c_str(), sendString.size()); //Send the string
-    }
 
-    sendString = push + id + "end";
-    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
+    for(int j=0; j<bag.size(); j++)
+    {
+        if(j==0)
+        {
+            products = bag.at(j);
+        }
+        else
+        {
+            products = products + ";" + bag.at(j);
+        }
+    }
+    sendString = push + id + products;                      //Create the string that will be send back
+    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 }
 
 vector <string> del(string product, vector <string> bag, string push, string id)
@@ -162,9 +165,6 @@ vector <string> del(string product, vector <string> bag, string push, string id)
     sendString = push + id + product + " is removed";      //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 
-    sendString = push + id + "end";
-    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
-
     return bag;
 }
 
@@ -180,9 +180,6 @@ void cut(string push, string id)
 
     sendString = push + id + " bag is removed";      //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
-
-    sendString = push + id + "end";
-    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
 }
 
 void unknownCommand(string three, string push, string id)
@@ -195,9 +192,6 @@ void unknownCommand(string three, string push, string id)
     cout << three << " unknown command by " << id << endl;      //Print out the text
     sendString = push + id + three + " unknown command"; //Create the string that will be send back
     ventilator.send(sendString.c_str(), sendString.size()); //Send the string
-
-    sendString = push + id + "end";
-    ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
 }
 
 vector <string> readTXTfile(string id)
