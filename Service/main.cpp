@@ -145,9 +145,21 @@ vector <string> del(string product, vector <string> bag, string push, string id)
 {
     int i = 0;
     cout << "del " << product << " by " << id << endl;                   //Print out the text
-    while(product != bag.at(i)){i++;}                //Look at which positions the element is in the vector
-    bag.erase(bag.begin()+i);                       //Remove the element at position i in the vector
-    string sendString = push + id + product + " is removed";      //Create the string that will be send back
+    string sendString = "";
+    for(int j=0; j<bag.size(); j++)
+    {
+        if(product == bag.at(j))
+        {
+            bag.erase(bag.begin()+j);                       //Remove the element at position i in the vector
+            sendString = push + id + product + " is removed";      //Create the string that will be send
+            i++;
+            break;
+        }
+        if(i==0)
+        {
+            sendString = push + id + product + " is not in bag";
+        }
+    }
     sendF(sendString);
 
     return bag;
