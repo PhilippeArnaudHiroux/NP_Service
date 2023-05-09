@@ -25,6 +25,7 @@ vector <string> readTXTfile(string id);
 void writeTXTfile(vector <string> bag,string id);
 string delUppChar(string str);
 string delLowChar(string str);
+void sendF(string sendText);
 
 int main( void )
 {
@@ -113,29 +114,18 @@ int main( void )
 }
 vector <string> add(string product, vector <string> bag, string push, string id)
 {
-    zmq::context_t context(1);
-    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
-    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
-    string sendString = "";
-
     cout << "add " << product << " by " << id << endl;                                   //Print out the text
     bag.push_back(product);                                          //Add the product to the shopBag
-    sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size());                 //Send the string
+    string sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
+    sendF(sendString);
 
     return bag;
 }
 
 void get(vector <string> bag, string push, string id)
 {
-    zmq::context_t context(1);
-    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
-    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
     string products = "";
-    string sendString = "";
-
     cout << "get shopBag by " << id << endl;                              //Print out the text
-
     for(int j=0; j<bag.size(); j++)
     {
         if(j==0)
@@ -147,51 +137,35 @@ void get(vector <string> bag, string push, string id)
             products = products + ";" + bag.at(j);
         }
     }
-    sendString = push + id + products;                      //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+    string sendString = push + id + products;                      //Create the string that will be send back
+    sendF(sendString);
 }
 
 vector <string> del(string product, vector <string> bag, string push, string id)
 {
-    zmq::context_t context(1);
-    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
-    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
-    string sendString = "";
-
     int i = 0;
     cout << "del " << product << " by " << id << endl;                   //Print out the text
     while(product != bag.at(i)){i++;}                //Look at which positions the element is in the vector
     bag.erase(bag.begin()+i);                       //Remove the element at position i in the vector
-    sendString = push + id + product + " is removed";      //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+    string sendString = push + id + product + " is removed";      //Create the string that will be send back
+    sendF(sendString);
 
     return bag;
 }
 
 void cut(string push, string id)
 {
-    zmq::context_t context(1);
-    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
-    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
-    string sendString = "";
-
     std::ofstream txtFile("../txt_files/" + id + ".txt", std::ofstream::out | std::ofstream::trunc);
     txtFile.close();
-
-    sendString = push + id + " bag is removed";      //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+    string sendString = push + id + " bag is removed";      //Create the string that will be send back
+    sendF(sendString);
 }
 
 void unknownCommand(string three, string push, string id)
 {
-    zmq::context_t context(1);
-    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
-    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
-    string sendString = "";
-
     cout << three << " unknown command by " << id << endl;      //Print out the text
-    sendString = push + id + three + " unknown command"; //Create the string that will be send back
-    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
+    string sendString = push + id + three + " unknown command"; //Create the string that will be send back
+    sendF(sendString);
 }
 
 vector <string> readTXTfile(string id)
@@ -230,4 +204,12 @@ string delLowChar(string str)
   // Replace every matched pattern with the
   // target string using regex_replace() method
   return regex_replace(str, pattern, "");
+}
+
+void sendF(string sendText) //A fucntion to send the message back
+{
+    zmq::context_t context(1);
+    zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
+    ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
+    ventilator.send(sendText.c_str(), sendText.size()); //Send the string
 }
