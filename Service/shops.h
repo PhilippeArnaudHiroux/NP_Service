@@ -1,5 +1,5 @@
-#ifndef SHOP_H
-#define SHOP_H
+#ifndef SHOPS_H
+#define SHOPS_H
 
 #include <iostream>
 #include <string>
@@ -21,10 +21,10 @@
 using namespace std;
 
 
-class shopC
+class shopS
 {
 public:
-    shopC();
+    shopS();
     vector <string> add(string product, vector <string> bag, string push, string id);
     void get(vector <string> bag, string push, string id);
     vector <string> del(string product, vector <string> bag, string push, string id);
@@ -48,4 +48,4 @@ protected:
 
 };
 
-#endif // SHOP_H
+#endif // SHOPS_H

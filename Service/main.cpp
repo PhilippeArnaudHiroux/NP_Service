@@ -1,9 +1,9 @@
 #include <iostream>
-#include "shop.h"
+#include "shops.h"
 
 int main( void )
 {
-    shopC a;
+    shopS shopService;
 
     return 0;
 }

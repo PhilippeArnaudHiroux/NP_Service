@@ -8,7 +8,7 @@ LIBS += -L$$PWD/../lib -lzmq -lws2_32 -lIphlpapi
 INCLUDEPATH += $$PWD/../include
 
 SOURCES += main.cpp \
-    shop.cpp
+    shops.cpp
 
 HEADERS += \
-    shop.h
+    shops.h
