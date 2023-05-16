@@ -26,14 +26,12 @@ public:
     string delUppChar(string str);
 
 protected:
-
-
     string sendString = "";         //In this string the messages will be stored that will be send
     string receivedString  = "";    //In this string the received messages will be stored
     string shopID = "";
     string recvSubject = "shop?";
     string pushSubject = "shop!";
-    int groote = (rand() % 5) +5;
+    int sizeID = (rand() % 5) +5;
 
 
 };
