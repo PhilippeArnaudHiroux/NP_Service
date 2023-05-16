@@ -21,10 +21,10 @@
 using namespace std;
 
 
-class shop
+class shopC
 {
 public:
-    shop();
+    shopC();
     vector <string> add(string product, vector <string> bag, string push, string id);
     void get(vector <string> bag, string push, string id);
     vector <string> del(string product, vector <string> bag, string push, string id);
@@ -36,7 +36,7 @@ public:
     string delLowChar(string str);
     void sendF(string sendText);
 
-private:
+protected:
     string receivedString = ""; //In this string the received messages will be stored
     string firstThree  = "";     //In this string will be the command stored
     string theProduct =  "";     //In this string will be the product stored

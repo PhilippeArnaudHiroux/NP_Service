@@ -1,6 +1,6 @@
 #include "shop.h"
 
-shop::shop()
+shopC::shopC()
 {
     try
     {
@@ -75,7 +75,7 @@ shop::shop()
     catch( zmq::error_t & ex ){std::cerr << "Caught an exception : " << ex.what();}
 }
 
-vector<string> shop::add(string product, vector<string> bag, string push, string id)
+vector<string> shopC::add(string product, vector<string> bag, string push, string id)
 {
     cout << "add " << product << " by " << id << endl;                                   //Print out the text
     bag.push_back(product);                                          //Add the product to the shopBag
@@ -85,7 +85,7 @@ vector<string> shop::add(string product, vector<string> bag, string push, string
     return bag;
 }
 
-void shop::get(vector<string> bag, string push, string id)
+void shopC::get(vector<string> bag, string push, string id)
 {
     string products = "";
     cout << "get shopBag by " << id << endl;                              //Print out the text
@@ -104,7 +104,7 @@ void shop::get(vector<string> bag, string push, string id)
     sendF(sendString);
 }
 
-vector<string> shop::del(string product, vector<string> bag, string push, string id)
+vector<string> shopC::del(string product, vector<string> bag, string push, string id)
 {
     int i = 0;
     cout << "del " << product << " by " << id << endl;                   //Print out the text
@@ -128,7 +128,7 @@ vector<string> shop::del(string product, vector<string> bag, string push, string
     return bag;
 }
 
-void shop::cut(string push, string id)
+void shopC::cut(string push, string id)
 {
     std::ofstream txtFile("../txt_files/" + id + ".txt", std::ofstream::out | std::ofstream::trunc);
     txtFile.close();
@@ -136,14 +136,14 @@ void shop::cut(string push, string id)
     sendF(sendString);
 }
 
-void shop::unknownCommand(string three, string push, string id)
+void shopC::unknownCommand(string three, string push, string id)
 {
     cout << three << " unknown command by " << id << endl;      //Print out the text
     string sendString = push + id + three + " unknown command"; //Create the string that will be send back
     sendF(sendString);
 }
 
-vector<string> shop::readTXTfile(string id)
+vector<string> shopC::readTXTfile(string id)
 {
     vector <string> bag;
     ifstream txtFile("../txt_files/" + id + ".txt");
@@ -154,14 +154,14 @@ vector<string> shop::readTXTfile(string id)
     return bag;
 }
 
-void shop::writeTXTfile(vector<string> bag, string id)
+void shopC::writeTXTfile(vector<string> bag, string id)
 {
     ofstream txtFile("../txt_files/" + id + ".txt", ios::out);
     for (int j = 0; j<bag.size(); j++){txtFile << bag.at(j) << "\n";} // write each element of the vector to the file
     txtFile.close();
 }
 
-string shop::delUppChar(string str)
+string shopC::delUppChar(string str)
 {
     // Create a regular expression
     const regex pattern("[A-Z]");
@@ -171,7 +171,7 @@ string shop::delUppChar(string str)
     return regex_replace(str, pattern, "");
 }
 
-string shop::delLowChar(string str)
+string shopC::delLowChar(string str)
 {
     // Create a regular expression
     const regex pattern("[a-z]");
@@ -181,7 +181,7 @@ string shop::delLowChar(string str)
     return regex_replace(str, pattern, "");
 }
 
-void shop::sendF(string sendText)
+void shopC::sendF(string sendText)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push

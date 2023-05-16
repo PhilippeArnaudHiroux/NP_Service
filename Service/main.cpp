@@ -3,7 +3,7 @@
 
 int main( void )
 {
-    shop a;
+    shopC a;
 
     return 0;
 }
