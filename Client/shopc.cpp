@@ -1,7 +1,8 @@
 #include "shopc.h"
-
+#include <locale>
 shopC::shopC()
 {
+    locale loc;
     createID();
     try
     {
@@ -20,7 +21,10 @@ shopC::shopC()
         while( ventilator.connected() && subscriber.connected())
         {
             cout << "Enter the command: ";                          //Print out the text
-            cin >> sendString;                                      //Let the user type in a command
+            cin >> inputString;                                      //Let the user type in a command
+
+            sendString = cleanString(inputString);
+
             sendString = pushSubject + shopID + sendString;
             ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 
@@ -28,7 +32,18 @@ shopC::shopC()
             receivedString  = string( (char*) msg->data(), msg->size() );   //Convert the received message to a string
             receivedString.erase(0, 5);                                     //Remove the first 5 characters of the string (sub topic)
             receivedString = delUppChar(receivedString);
-            cout << "    -> " << receivedString  << endl;               //Print out the text                                 //As long as the end command is not received
+            inputString.erase(3,inputString.size());
+
+            if(inputString == "get")
+            {
+                splitString();
+                printProducts();
+            }
+            else
+            {
+                cout << "    -> " << receivedString  << endl;               //Print out the text                                 //As long as the end command is not received
+
+            }
         }
     }
     catch( zmq::error_t & ex )
@@ -48,6 +63,19 @@ void shopC::createID()
     cout << shopID << endl;
 }
 
+string shopC::cleanString(string str)
+{
+    for (int i=0; i<str.size(); ++i)
+    {
+        if(str[i] >= 'A' and str[i] <= 'Z')
+        {
+            str[i] = str[i] + 32;
+        }
+    }
+
+    return str;
+}
+
 string shopC::delUppChar(string str)
 {
     // Create a regular expression
@@ -56,4 +84,21 @@ string shopC::delUppChar(string str)
     // Replace every matched pattern with the
     // target string using regex_replace() method
     return regex_replace(str, pattern, "");
+}
+
+void shopC::splitString()
+{
+    istringstream iss(receivedString);
+    while(getline(iss, token, ';'))
+    {
+        products.push_back(token);
+    }
+}
+
+void shopC::printProducts()
+{
+    for(int i=0; i<products.size(); i++)
+    {
+        cout << "   -> " << products.at(i) << endl;
+    }
 }

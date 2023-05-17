@@ -10,6 +10,8 @@
 #include <fstream>
 #include <Windows.h>
 #include <cstdio>
+#include <filesystem>
+
 
 #ifndef _WIN32
     #include <unistd.h>
@@ -25,24 +27,26 @@ class shopS
 {
 public:
     shopS();
-    vector <string> add(string product, vector <string> bag, string push, string id);
-    void get(vector <string> bag, string push, string id);
-    vector <string> del(string product, vector <string> bag, string push, string id);
-    void cut(string push,string id);
-    void unknownCommand(string three, string push, string id);
-    vector <string> readTXTfile(string id);
-    void writeTXTfile(vector <string> bag,string id);
+
+    void writeTXTfile();
     string delUppChar(string str);
     string delLowChar(string str);
-    void sendF(string sendText);
+    void sendF();
+    void add();
+    void get();
+    void del();
+    void cut();
+    void unknownCommand();
+    void readTXTfile();
 
-protected:
+private:
     string receivedString = ""; //In this string the received messages will be stored
     string firstThree  = "";     //In this string will be the command stored
     string theProduct =  "";     //In this string will be the product stored
     string pushSubject = "shop?";
     string recvSubject = "shop!";
     string shopID = "";
+    string sendString = "";
     vector <string> shopBag;    //In this vector the product will be saved
     vector <string> shopIDvector;
 

@@ -36,7 +36,7 @@ shopS::shopS()
                 {
                     if(shopID == shopIDvector.at(k))
                     {
-                        shopBag = readTXTfile(shopID);
+                        readTXTfile();
                         break;
                     }
                     else
@@ -49,115 +49,118 @@ shopS::shopS()
 
             if(firstThree == "add")                                                     //If add
             {
-                shopBag = add(theProduct, shopBag, pushSubject, shopID);
+                add();
             }
             else if(firstThree == "get")                                    //If get
             {
-                get(shopBag, pushSubject, shopID);
+                get();
             }
             else if(firstThree == "del")                                //If del
             {
-                shopBag = del(theProduct, shopBag, pushSubject, shopID);
+                del();
             }
             else if(firstThree == "cut")
             {
-                cut(pushSubject, shopID);
+                cut();
             }
             else
             {
-                unknownCommand(firstThree, pushSubject, shopID);
+                unknownCommand();
             }
 
-            writeTXTfile(shopBag, shopID);
+            writeTXTfile();
             shopBag.clear();
         }
     }
     catch( zmq::error_t & ex ){std::cerr << "Caught an exception : " << ex.what();}
 }
 
-vector<string> shopS::add(string product, vector<string> bag, string push, string id)
+void shopS::add()
 {
-    cout << "add " << product << " by " << id << endl;                                   //Print out the text
-    bag.push_back(product);                                          //Add the product to the shopBag
-    string sendString = push + id + product + " has been added to your basket!";  //Create the string that will be send back
-    sendF(sendString);
-
-    return bag;
+    cout << "add " << theProduct << " by " << shopID << endl;                                   //Print out the text
+    shopBag.push_back(theProduct);                                          //Add the product to the shopBag
+    sendString = pushSubject + shopID + theProduct + " has been added to your basket!";  //Create the string that will be send back
+    sendF();
 }
 
-void shopS::get(vector<string> bag, string push, string id)
+void shopS::get()
 {
     string products = "";
-    cout << "get shopBag by " << id << endl;                              //Print out the text
-    for(int j=0; j<bag.size(); j++)
+    cout << "get shopBag by " << shopID << endl;                              //Print out the text
+    for(int j=0; j<shopBag.size(); j++)
     {
         if(j==0)
         {
-            products = bag.at(j);
+            products = shopBag.at(j);
         }
         else
         {
-            products = products + ";" + bag.at(j);
+            products = products + ";" + shopBag.at(j);
         }
     }
-    string sendString = push + id + products;                      //Create the string that will be send back
-    sendF(sendString);
+    sendString = pushSubject + shopID + products;                      //Create the string that will be send back
+    sendF();
 }
 
-vector<string> shopS::del(string product, vector<string> bag, string push, string id)
+void shopS::del()
 {
     int i = 0;
-    cout << "del " << product << " by " << id << endl;                   //Print out the text
-    string sendString = "";
-    for(int j=0; j<bag.size(); j++)
+    cout << "del " << theProduct << " by " << shopID << endl;                   //Print out the text
+    sendString = "";
+    for(int j=0; j<shopBag.size(); j++)
     {
-        if(product == bag.at(j))
+        if(theProduct == shopBag.at(j))
         {
-            bag.erase(bag.begin()+j);                       //Remove the element at position i in the vector
-            sendString = push + id + product + " is removed";      //Create the string that will be send
+            shopBag.erase(shopBag.begin()+j);                       //Remove the element at position i in the vector
+            sendString = pushSubject + shopID + theProduct + " is removed";      //Create the string that will be send
             i++;
             break;
         }
         if(i==0)
         {
-            sendString = push + id + product + " is not in bag";
+            sendString = pushSubject + shopID + theProduct + " is not in bag";
         }
     }
-    sendF(sendString);
-
-    return bag;
+    sendF();
 }
 
-void shopS::cut(string push, string id)
+void shopS::cut()
 {
-    std::ofstream txtFile("../txt_files/" + id + ".txt", std::ofstream::out | std::ofstream::trunc);
+    /*
+    std::ofstream txtFile("../txt_files/" + shopID + ".txt", std::ofstream::out | std::ofstream::trunc);
     txtFile.close();
-    string sendString = push + id + " bag is removed";      //Create the string that will be send back
-    sendF(sendString);
+    sendString = pushSubject + shopID + " bag is removed";      //Create the string that will be send back
+    sendF();
+    */
+
+    string test = "../txt_files/" + shopID + ".txt";
+    std::filesystem::remove(test);
+    sendString = pushSubject + shopID + " bag is removed";      //Create the string that will be send back
+    sendF();
 }
 
-void shopS::unknownCommand(string three, string push, string id)
+void shopS::unknownCommand()
 {
-    cout << three << " unknown command by " << id << endl;      //Print out the text
-    string sendString = push + id + three + " unknown command"; //Create the string that will be send back
-    sendF(sendString);
+    cout << firstThree << " unknown command by " << shopID << endl;      //Print out the text
+    sendString = pushSubject + shopID + firstThree + " unknown command"; //Create the string that will be send back
+    sendF();
 }
 
-vector<string> shopS::readTXTfile(string id)
+void shopS::readTXTfile()
 {
-    vector <string> bag;
-    ifstream txtFile("../txt_files/" + id + ".txt");
+    ifstream txtFile("../txt_files/" + shopID + ".txt");
     string prouct;
-    while(getline(txtFile, prouct)){bag.push_back(prouct);}
+    while(getline(txtFile, prouct))
+    {
+        shopBag.push_back(prouct);
+    }
     txtFile.close();
-
-    return bag;
 }
 
-void shopS::writeTXTfile(vector<string> bag, string id)
+void shopS::writeTXTfile()
 {
-    ofstream txtFile("../txt_files/" + id + ".txt", ios::out);
-    for (int j = 0; j<bag.size(); j++){txtFile << bag.at(j) << "\n";} // write each element of the vector to the file
+    ofstream txtFile("../txt_files/" + shopID + ".txt", ios::out);
+    for (int j = 0; j<shopBag.size(); j++){txtFile << shopBag.at(j) << "\n";} // write each element of the vector to the file
     txtFile.close();
 }
 
@@ -181,10 +184,10 @@ string shopS::delLowChar(string str)
     return regex_replace(str, pattern, "");
 }
 
-void shopS::sendF(string sendText)
+void shopS::sendF()
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
     ventilator.connect( "tcp://benternet.pxl-ea-ict.be:24041" );        //Service push
-    ventilator.send(sendText.c_str(), sendText.size()); //Send the string
+    ventilator.send(sendString.c_str(), sendString.size()); //Send the string
 }
