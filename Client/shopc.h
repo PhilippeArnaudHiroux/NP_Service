@@ -37,11 +37,8 @@ private:
     string recvSubject = "shop?";
     string pushSubject = "shop!";
     vector <string> products;
-
     string token;
     int sizeID = (rand() % 5) +5;
-
-
 };
 
 #endif // SHOPC_H

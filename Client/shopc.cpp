@@ -2,7 +2,6 @@
 #include <locale>
 shopC::shopC()
 {
-    locale loc;
     createID();
     try
     {
@@ -44,6 +43,7 @@ shopC::shopC()
                 cout << "    -> " << receivedString  << endl;               //Print out the text                                 //As long as the end command is not received
 
             }
+            products.clear();
         }
     }
     catch( zmq::error_t & ex )
