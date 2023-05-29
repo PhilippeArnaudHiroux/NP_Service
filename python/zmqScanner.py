@@ -4,7 +4,7 @@ from datetime import datetime
 context = zmq.Context()
 subscriber = context.socket(zmq.SUB)
 subscriber.connect("tcp://benternet.pxl-ea-ict.be:24042")
-topic_filter = ""
+topic_filter = "shop"
 subscriber.setsockopt_string(zmq.SUBSCRIBE, topic_filter)
 
 while True:

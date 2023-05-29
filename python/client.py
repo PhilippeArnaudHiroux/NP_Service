@@ -15,11 +15,12 @@ socketRecv.connect("tcp://benternet.pxl-ea-ict.be:24042")
 
 topicRecv = "shop?" + shopID
 topicSend = "shop!" + shopID
+socketRecv.setsockopt_string(zmq.SUBSCRIBE, topicRecv)
 
 while(1):
     messageSend = input("Type in your command: ")
     messageSend = topicSend + messageSend
-    socketRecv.setsockopt_string(zmq.SUBSCRIBE, topicRecv)
+    print(messageSend)
     socketSend.send_string(messageSend)
     reply = socketRecv.recv_string()
     print(reply)

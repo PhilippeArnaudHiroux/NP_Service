@@ -24,27 +24,24 @@ shopS::shopS()
             theProduct = delUppChar(receivedString);                                //Set theProduct equal to receivedString
             firstThree.erase(3,firstThree.size());                      //Remove everything after the first 3 characters
             theProduct.erase(0, 3);                                     //Remove the first 3 characters
+            int controle = 0;
 
-            if(shopIDvector.size()==0)
-            {
-                shopIDvector.push_back(shopID);
-                cout << "new customer by " << shopID << endl;
-            }
-            else
+            if(shopIDvector.size() != 0)
             {
                 for(int k=0; k<shopIDvector.size(); k++)
                 {
                     if(shopID == shopIDvector.at(k))
                     {
                         readTXTfile();
+                        controle++;
                         break;
-                    }
-                    else
-                    {
-                        shopIDvector.push_back(shopID);
-                        cout << "new customer by " << shopID << endl;
-                    }
+                    } 
                 }
+            }
+            if(controle == 0)
+            {
+                shopIDvector.push_back(shopID);
+                cout << "new customer by " << shopID << endl;
             }
 
             if(firstThree == "add")                                                     //If add
