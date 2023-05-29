@@ -11,7 +11,7 @@ socketRecv.connect("tcp://benternet.pxl-ea-ict.be:24042")
 
 checkMessage = "shop!***"
 timeOutMessage = "I want to let the world know that my service just died at "
-recvTopic = "shop?"
+recvTopic = "shop?***"
 socketRecv.setsockopt_string(zmq.SUBSCRIBE, recvTopic)
 check = 1
 
