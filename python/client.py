@@ -25,7 +25,3 @@ while(1):
     reply = socketRecv.recv_string()
     print(reply)
 
-# Close the socket and context
-#socketSend.close()
-#context.term()
-

@@ -38,6 +38,7 @@ public:
     void cut();
     void unknownCommand();
     void readTXTfile();
+    void heartbeat();
 
 private:
     string receivedString = ""; //In this string the received messages will be stored

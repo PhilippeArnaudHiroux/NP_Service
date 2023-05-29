@@ -25,48 +25,54 @@ shopS::shopS()
             firstThree.erase(3,firstThree.size());                      //Remove everything after the first 3 characters
             theProduct.erase(0, 3);                                     //Remove the first 3 characters
             int controle = 0;
-
-            if(shopIDvector.size() != 0)
+            if(firstThree == "***")
             {
-                for(int k=0; k<shopIDvector.size(); k++)
-                {
-                    if(shopID == shopIDvector.at(k))
-                    {
-                        readTXTfile();
-                        controle++;
-                        break;
-                    } 
-                }
-            }
-            if(controle == 0)
-            {
-                shopIDvector.push_back(shopID);
-                cout << "new customer by " << shopID << endl;
-            }
-
-            if(firstThree == "add")                                                     //If add
-            {
-                add();
-            }
-            else if(firstThree == "get")                                    //If get
-            {
-                get();
-            }
-            else if(firstThree == "del")                                //If del
-            {
-                del();
-            }
-            else if(firstThree == "cut")
-            {
-                cut();
+                heartbeat();
             }
             else
             {
-                unknownCommand();
-            }
+                if(shopIDvector.size() != 0)
+                {
+                    for(int k=0; k<shopIDvector.size(); k++)
+                    {
+                        if(shopID == shopIDvector.at(k))
+                        {
+                            readTXTfile();
+                            controle++;
+                            break;
+                        }
+                    }
+                }
+                if(controle == 0)
+                {
+                    shopIDvector.push_back(shopID);
+                    cout << "new customer by " << shopID << endl;
+                }
 
-            writeTXTfile();
-            shopBag.clear();
+                if(firstThree == "add")                                                     //If add
+                {
+                    add();
+                }
+                else if(firstThree == "get")                                    //If get
+                {
+                    get();
+                }
+                else if(firstThree == "del")                                //If del
+                {
+                    del();
+                }
+                else if(firstThree == "cut")
+                {
+                    cut();
+                }
+                else
+                {
+                    unknownCommand();
+                }
+
+                writeTXTfile();
+                shopBag.clear();
+            }
         }
     }
     catch( zmq::error_t & ex ){std::cerr << "Caught an exception : " << ex.what();}
@@ -152,6 +158,12 @@ void shopS::readTXTfile()
         shopBag.push_back(prouct);
     }
     txtFile.close();
+}
+
+void shopS::heartbeat()
+{
+    sendString = "shop?***";
+    sendF();
 }
 
 void shopS::writeTXTfile()
