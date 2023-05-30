@@ -154,7 +154,6 @@ void shopS::writeTXTfile()                                                      
 
 string shopS::delUppChar(string str)                                                    //The dellUppChar function will remove all the upperchars of a string
 {
-
     const regex pattern("[A-Z]");                                                       //Create a regular expression from A to Z
     return regex_replace(str, pattern, "");                                             //Return the string without the upperchars in it
 }
