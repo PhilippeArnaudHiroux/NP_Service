@@ -3,7 +3,7 @@
 
 int main( void )
 {
-    shopS shopService;
+    shopS shopService; //Shop object
 
     return 0;
 }
