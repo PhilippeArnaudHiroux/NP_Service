@@ -21,24 +21,24 @@ using namespace std;
 
 class shopC
 {
-public:
-    shopC();
-    void createID();
-    string cleanString(string str);
-    string delUppChar(string str);
-    void splitString();
-    void printProducts();
+    public:
+        shopC();                        //Constructor
+        void createID();                //Fucntion to create your shopID
+        string cleanString(string str); //Function to clean up the string
+        string delUppChar(string str);  //Function to remove the upperchars from a string
+        void splitString();             //Function to split a string
+        void printProducts();           //Function to print the products
 
-private:
-    string sendString = "";         //In this string the messages will be stored that will be send
-    string receivedString  = "";    //In this string the received messages will be stored
-    string shopID = "";
-    string inputString = "";
-    string recvSubject = "shop?";
-    string pushSubject = "shop!";
-    vector <string> products;
-    string token;
-    int sizeID = (rand() % 5) +5;
+    private:
+        string sendString = "";         //In this string the messages will be stored that will be send
+        string receivedString  = "";    //In this string the received messages will be stored
+        string shopID = "";             //In this string the shopID will be stored
+        string inputString = "";        //In this string the inputString will be stored
+        string recvSubject = "shop?";   //In this string the recvSubject is written
+        string pushSubject = "shop!";   //In this string the pushSubject is written
+        vector <string> products;       //In this vector the products will be stored
+        string token;                   //In this string the token will be strored
+        int sizeID = (rand() % 5) +5;   //In this integer there will be a random value be stored
 };
 
 #endif // SHOPC_H
