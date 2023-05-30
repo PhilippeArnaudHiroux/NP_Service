@@ -1,6 +1,14 @@
 import zmq
 import time
 from datetime import datetime
+import requests
+
+url = "https://discord.com/api/v9/channels/1113158016771047457/messages"
+auth = {
+    'Authorization' : 'Nzc2NzU2MzIwNzQ4NTY4NTk3.GA3rmY.toWT_6mFvkeqOBpJR6xTXh3Asomtk04K-eISKI'
+}
+
+
 
 context = zmq.Context()                                                         #ZeroMQ context
 socketSend = context.socket(zmq.PUSH)                                           #socketSend is to PUSH
@@ -28,6 +36,8 @@ while(check == 1):                                                              
         now = datetime.now()                                                    #Take the time
         date_now = now.strftime("%Y-%m-%d %H:%M:%S")                            #Take the year - month - day - hour - minute - seconds
         socketSend.send_string(timeOutMessage+date_now)                         #Send the timeOutMessage and the time
+        msg = {'content':'The server died at ' + date_now}                      #Create string that need to be send to Discord
+        requests.post(url, headers=auth, data=msg)                              #Send to Discord
         check = 0                                                               #Make check equel to 0 (by doing this you will go out of the will loop)
         break                                                                   #Break out of the loop
 
