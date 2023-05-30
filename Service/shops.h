@@ -33,7 +33,6 @@ class shopS
         void add();                     //Function to add someting to the shopBag vector
         void get();                     //Function to get every element of the shopBag vector
         void del();                     //Function to remove an element out of the vector
-        void cut();                     //Function to remove the shopBag
         void unknownCommand();          //Function for if there is an unkown command
         void readTXTfile();             //Function to read the txt file with the right shopID
         void heartbeat();               //FUnction for the heartbeat test (heartbeatCheck.py needed for this)
