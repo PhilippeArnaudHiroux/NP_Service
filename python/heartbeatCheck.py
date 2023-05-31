@@ -3,10 +3,8 @@ import time
 from datetime import datetime
 import requests
 
-url = "https://discord.com/api/v9/channels/1113158016771047457/messages"
-auth = {
-    'Authorization' : 'Nzc2NzU2MzIwNzQ4NTY4NTk3.GA3rmY.toWT_6mFvkeqOBpJR6xTXh3Asomtk04K-eISKI'
-}
+url = ""                                                                        #Fill in the url to your Discord chanel
+auth = {'Authorization' : '' }                                                  #Fill in Authorization between the ''
 
 
 
