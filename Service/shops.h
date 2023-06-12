@@ -36,6 +36,7 @@ class shopS
         void unknownCommand();          //Function for if there is an unkown command
         void readTXTfile();             //Function to read the txt file with the right shopID
         void heartbeat();               //FUnction for the heartbeat test (heartbeatCheck.py needed for this)
+        void getNumber();
 
     private:
         string receivedString = "";     //In this string the received messages will be stored
@@ -47,6 +48,7 @@ class shopS
         string sendString = "";         //In this string the sendString will be stored
         vector <string> shopBag;        //In this vector the product will be saved
         vector <string> shopIDvector;   //In this vector all the shopID will be stored
+        string productAmount = "";
 
 };
 

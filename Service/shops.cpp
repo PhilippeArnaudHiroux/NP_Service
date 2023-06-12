@@ -51,6 +51,7 @@ shopS::shopS()
                 if(firstThree == "add")                                                 //If firstThree is equel to add run this code
                 {
                     add();                                                              //Run the add function
+                    getNumber();
                 }
                 else if(firstThree == "get")                                            //If firstThree is equel to get run this code
                 {
@@ -67,6 +68,7 @@ shopS::shopS()
 
                 writeTXTfile();                                                         //Run the writeTXTfile function
                 shopBag.clear();                                                        //Clear the shopBag vector so its empty and ready to use again
+                cout << endl << endl << endl;
             }
         }
     }
@@ -75,10 +77,84 @@ shopS::shopS()
 
 void shopS::add()                                                                       //The add function is to add something to your shopBag
 {
+    getNumber();
+    string randomIets = "";
+    vector <string> productBag;
+    vector <string> amountBag;
+    vector <int> amountIntBag;
+    cout << "****DEBUG****: " << productAmount<< endl;
+    int amount = std::stoi(productAmount);
+    cout << "****DEBUG****" << endl;
+    int amount2 = 0;
+    int controle = 0;
+    const regex pattern1("[A-Z]");
+    const regex pattern2("[a-z]");
+
+    for(int i= 0; i<shopBag.size(); i++)
+    {
+        randomIets = shopBag.at(i);
+        cout << "****DEBUG**** randomIets: " << randomIets << endl;
+        for(int j=0; j<randomIets.size(); j++)
+        {
+            if(isdigit(randomIets[j]))
+            {
+                randomIets.erase(j, 1);
+            }
+        }
+        cout << "****DEBUG**** push in product vector: " << randomIets << endl;
+        productBag.push_back(randomIets);
+    }
+    for(int i=0; i<shopBag.size(); i++)
+    {
+        randomIets = shopBag.at(i);
+        randomIets = regex_replace(productAmount, pattern1, "");
+        randomIets = regex_replace(productAmount, pattern2, "");
+        amountBag.push_back(randomIets);
+        amount2 = std::stoi(randomIets);
+        amountIntBag.push_back(amount2);
+        cout << "****DEBUG**** randomiets in amount bag: " << randomIets << endl;
+    }
+
+    if(productBag.size() == 0)
+    {
+        shopBag.push_back(theProduct);
+        //productBag.push_back(theProduct);
+    }
+    else
+    {
+        for(int j=0; j<productBag.size(); j++)
+        {
+            cout << "****DEBUG**** zit in de for loop" << endl;
+            cout << "****DEBUG**** " << theProduct << " --- " << productBag.at(j) << endl;
+            if(theProduct == productBag.at(j))
+            {
+                for(int m=0; m<amountIntBag.size(); m++)
+                {
+                    cout << "       ****DEBUG**** amounnt: " << amountIntBag.at(m) << " at position " << m << endl;
+                }
+                cout << "****DEBUG**** product is in bag" << endl;
+                amount = amount + amountIntBag.at(j);
+                cout << "****DEBUG**** total amount: " << amount << endl;
+                randomIets = to_string(amount);
+                shopBag.push_back(theProduct+randomIets);
+                j = productBag.size();
+                controle++;
+            }
+        }
+        if(controle == 0)
+        {
+            shopBag.push_back(theProduct);
+            //productBag.push_back(theProduct);
+            cout << "****DEBUG**** if controle = 0" << endl;
+        }
+    }
+    controle = 0;
+
     cout << "add " << theProduct << " by " << shopID << endl;                           //Print out the text
-    shopBag.push_back(theProduct);                                                      //Add the product to the shopBag
     sendString = pushSubject + shopID + theProduct + " has been added to your basket!"; //Create the string that will be send back
     sendF();                                                                            //Run the sendF function
+    productBag.clear();
+    amountBag.clear();
 }
 
 void shopS::get()                                                                       //The get function is the get all elements of your shopBag
@@ -145,6 +221,15 @@ void shopS::heartbeat()                                                         
     sendF();                                                                            //Run the sendF function
 }
 
+void shopS::getNumber()
+{
+    productAmount = receivedString;
+    const regex pattern1("[A-Z]");
+    const regex pattern2("[a-z]");
+    productAmount = regex_replace(productAmount, pattern1, "");
+    productAmount = regex_replace(productAmount, pattern2, "");
+}
+
 void shopS::writeTXTfile()                                                              //The writeTXTfile function re-write the txt file
 {
     ofstream txtFile("../txt_files/" + shopID + ".txt", ios::out);                      //Open the txt file
@@ -155,13 +240,29 @@ void shopS::writeTXTfile()                                                      
 string shopS::delUppChar(string str)                                                    //The dellUppChar function will remove all the upperchars of a string
 {
     const regex pattern("[A-Z]");                                                       //Create a regular expression from A to Z
-    return regex_replace(str, pattern, "");                                             //Return the string without the upperchars in it
+    string product = regex_replace(str, pattern, "");
+    for(int i=0; i< product.size(); i++)
+    {
+        if(isdigit(product[i]))
+        {
+            product.erase(i, 1);
+        }
+    }
+    return product;                                             //Return the string without the upperchars in it
 }
 
 string shopS::delLowChar(string str)                                                    //The delLowChar function will remove all the lowwerchars of a string
 {
     const regex pattern("[a-z]");                                                       //Create a regular expression from a to z
-    return regex_replace(str, pattern, "");                                             //Return the string without the lowwerchars in it
+    string id = regex_replace(str, pattern, "");
+    for(int i=0; i< id.size(); i++)
+    {
+        if(isdigit(id[i]))
+        {
+            id.erase(i, 1);
+        }
+    }
+    return id;                                             //Return the string without the lowwerchars in it
 }
 
 void shopS::sendF()                                                                     //The sendF function is the function that will be used to send the sendString in to the world
