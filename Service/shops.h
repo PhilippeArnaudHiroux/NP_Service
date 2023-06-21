@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -17,6 +18,8 @@ class ShopS
         string shopID = "";
         string command = "";
         string product = "";
+
+        vector <string> shopBag;
 };
 
 #endif // SHOPS_H
