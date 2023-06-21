@@ -10,8 +10,10 @@ INCLUDEPATH += $$PWD/../include
 SOURCES += \
         main.cpp \
         shops.cpp \
+        split.cpp \
         zmqserver.cpp
 
 HEADERS += \
     shops.h \
+    split.h \
     zmqserver.h

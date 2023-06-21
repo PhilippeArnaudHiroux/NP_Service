@@ -11,10 +11,12 @@ class ShopS
     public:
         ShopS();
     protected:
-
         string recvString = "";
-        string sendString = "etst";
+        string sendString = "";
 
+        string shopID = "";
+        string command = "";
+        string product = "";
 };
 
 #endif // SHOPS_H
