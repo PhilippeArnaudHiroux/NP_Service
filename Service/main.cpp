@@ -1,9 +1,9 @@
 #include <iostream>
-#include "shops.h"
 
-int main( void )
+using namespace std;
+
+int main()
 {
-    shopS shopService; //Shop object
-
+    cout << "Hello World!" << endl;
     return 0;
 }
