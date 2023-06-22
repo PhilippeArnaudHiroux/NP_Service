@@ -3,26 +3,38 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <regex>
 
-#include "shops.h"
+#include "zmqservice.h"
 
 using namespace std;
 
-class Commands : public ShopS
+class Commands
 {
-public:
-    Commands();
-    void addF();
-    void getF();
-    void delF();
-    void unkownCommand();
-    void sendStringF(string text, string theProduct);
+    public:
+        //Constructor and destructor
+        Commands();
+        ~Commands();
+
+        //Functions
+        void setInput();
+        void setShopID();
+        void setPorduct();
+        void setCommand();
 
 private:
-    string addText = " is add to your bag";
-    string getText = "";
-    string delText = " is del from your bag";
+        //Objects
+        ZmqService zmqObj;
+
+        //Variabels
+        string input = "";
+        string shopID = "";
+        string product = "";
+        string command = "";
+
+        //Pointers
+        const regex *lowChar = new const regex ("[a-z]");
+        const regex *uppChar = new const regex ("[A-Z]");
 };
 
 #endif // COMMANDS_H

@@ -2,60 +2,38 @@
 
 Commands::Commands()
 {
-
+    zmqObj.recvF();
 }
 
-void Commands::addF()
+Commands::~Commands()
 {
-    cout << product << " add by " << shopID << endl;
-    shopBag.push_back(product);
-    sendStringF(addText, product);
+    delete lowChar;
+    delete uppChar;
 }
 
-void Commands::getF()
+void Commands::setInput()
 {
-    cout << "Get by " << shopID << endl;
-    for(int i=0; i<shopBag.size(); i++)
-    {
-        if(i==0)
-        {
-            getText = shopBag.at(i);
-        }
-        else
-        {
-            getText = getText + ";" + shopBag.at(i);
-        }
-    }
-    sendString = getText;
+    input = zmqObj.getRecvString();
+    cout << input << endl;
 }
 
-void Commands::delF()
+void Commands::setShopID()
 {
-    int j = 0;
-    cout << product << " del by " << shopID << endl;
-    for(int i=0; i<shopBag.size(); i++)
-    {
-        if(product == shopBag.at(i))
-        {
-            shopBag.erase(shopBag.begin()+i);
-            sendStringF(delText, product);
-            j++;
-            break;
-        }
-    }
-    if(j==0)
-    {
-        sendString = product + " is not in bag";
-    }
+    shopID = regex_replace(input, *lowChar, "");
+    cout << "DEBUG 1 " << shopID << endl;
 }
 
-void Commands::unkownCommand()
+void Commands::setPorduct()
 {
-    cout << command << " is an unkown command by " << shopID << endl;
-    sendString = command + " is an unkown command";
+    product = regex_replace(input, *uppChar, "");
+    product.erase(0,3);
+    cout << "DEBUG 2 " << product << endl;
 }
 
-void Commands::sendStringF(string text, string theProduct)
+void Commands::setCommand()
 {
-    sendString = theProduct + text;
+    command = regex_replace(input, *uppChar, "");
+    command.erase(3, command.size());
+    cout << "DEBUG 3 " << command << endl;
 }
+
