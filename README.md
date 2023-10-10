@@ -69,7 +69,7 @@ In this part the code from both application will be explained.
 ## Client
 ### 1. Generate shopID
 First the code will generate his own **shopID**.
-<pre><code>
+'''cpp
 int size = (rand() % 5) +5;
 for(int i=0; i&lt;size; i++)
 {
@@ -77,7 +77,7 @@ for(int i=0; i&lt;size; i++)
 }
 
 cout << shopID << endl;
-</code></pre>
+'''
 
 ### 2. send messages
 The application wil first ask to type your **command** and **product**. Afhter this it will add all strings together to one string.<br>
