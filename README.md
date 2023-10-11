@@ -63,7 +63,7 @@ Also the client and service need to listen at different subjects. Otherwise they
 ## Example
 ![Example](image/example.JPG)
 
-# Code from client and service
+# Code from client and service c++
 In this part the code from both application will be explained.
 
 ## Client
@@ -243,3 +243,7 @@ At the end the **shopBag** will be cleared so its ready to use again.
 ```cpp
 shopBag.clear();
 ```
+
+# Python code
+There are also a few  [Python codes](https://github.com/PhilippeArnaudHiroux/NP_Service/tree/main/python) to check out.
+
