@@ -18,7 +18,7 @@ print(shopID)                                                       #Print out t
 ```
 
 ## Create sockets
-There must be created a socket to send and a sochet to receive. And give the sockets an adress ro sent to or receive from.
+There must be created a socket to send and a sochet to receive. And give the sockets an adress to sent to or receive from.
 ```py
 context = zmq.Context()                                             #ZeroMQ context object
 socketSend = context.socket(zmq.PUSH)                               #SocketSend is to PUSH
@@ -72,4 +72,79 @@ def printOutput(input):                                             #The printOu
     input = input[5:]                                               #Remove the first 5 elements of the string
     input = ''.join([char for char in input if not char.isupper()]) #Remve all the upperchars of the string
     print(input)                                                    #Print out the text
+```
+
+# heartbeatCheck
+The [heartbeatCheck](https://github.com/PhilippeArnaudHiroux/NP_Service/blob/main/python/heartbeatCheck.py) code will look if the service is still running.
+
+## Import
+The imports needed for this code are.
+```py
+import zmq
+import time
+from datetime import datetime
+import requests
+```
+
+## Discord
+Its also possible that this code send a message to your discord when it get not response from the service. If you want that you need to fill in the next two lines of code.
+```py
+url = ""                                                                        #Fill in the url to your Discord chanel
+auth = {'Authorization' : '' }                                                  #Fill in Authorization between the ''
+```
+
+## Create sockets
+There must be created a socket to send and a sochet to receive. And give the sockets an adress to sent to or receive from.
+```py
+context = zmq.Context()                                                         #ZeroMQ context
+socketSend = context.socket(zmq.PUSH)                                           #socketSend is to PUSH
+socketRecv = context.socket(zmq.SUB)                                            #SocketRecv is to SUB
+
+socketSend.connect("tcp://benternet.pxl-ea-ict.be:24041")                       #Send to this adress
+socketRecv.connect("tcp://benternet.pxl-ea-ict.be:24042")                       #Lissen to this adress
+```
+
+## Create topics
+Create the topics the heartbeatCheck need to lissen to and to send with.<br>
+You can alse change the text that need to be send to your discord.
+```py
+checkMessage = "shop!***"                                                       #Create a string with the name checkMessage and make it equel to shop!***
+recvTopic = "shop?***"                                                          #Create a string with the name recvTopic and make it equel to shop?***
+timeOutMessage = "I want to let the world know that my service just died at "   #Create a string with the naem timeOutMassage and make it equel to I want to let the world know that my service just died at 
+socketRecv.setsockopt_string(zmq.SUBSCRIBE, recvTopic)                          #The code can only receive the strings that start with the value stored in topicRecv
+check = 1                                                                       #Create a veriable and make it equel to 1
+```
+
+## while loop
+First the code will send a message to the service. Afhter that it will wait for 10 seconds to get a reply from the service.<br>
+if there is a reply in the 10 seconds, the Python code will look what time it is and will print out on what time he received the reply from the service.<br>
+When there is no reply in the 10 seconds, the Python code will also look what time it is and print it out on what time the service did not reply anymore. It will also send a message to your discord if you have filled in the discord part.
+```py
+while(check == 1):                                                              #Do this as long as check is equel to 1
+    socketSend.send_string(checkMessage)                                        #Send the checkMessage
+
+    if socketRecv.poll(timeout=10000) & zmq.POLLIN:                             #If there is a repply in 10 seconds run this code
+        now = datetime.now()                                                    #Take the time
+        date_now = now.strftime("%Y-%m-%d %H:%M:%S")                            #Take the year - month - day - hour - minute - seconds
+        reply = socketRecv.recv_string()                                        #Receive the string
+        print("Received", reply, "at ", date_now)                               #Print out the text
+    else:                                                                       #If there is no reply in 10 seconds run this code
+        print("No reply received. Ending the program.")                         #Print the text
+        now = datetime.now()                                                    #Take the time
+        date_now = now.strftime("%Y-%m-%d %H:%M:%S")                            #Take the year - month - day - hour - minute - seconds
+        socketSend.send_string(timeOutMessage+date_now)                         #Send the timeOutMessage and the time
+        msg = {'content':'The server died at ' + date_now}                      #Create string that need to be send to Discord
+        requests.post(url, headers=auth, data=msg)                              #Send to Discord
+        check = 0                                                               #Make check equel to 0 (by doing this you will go out of the will loop)
+        break                                                                   #Break out of the loop
+
+    time.sleep(10)                                                              #The code can take a break and sleep for 10 seconds
+```
+
+## Close sockets
+At the end of the code you have to close your sockets.
+```py
+socketRecv.close()                                                              #Close the socketRecv
+socketSend.close()                                                              #Close the socketSend
+context.term()                                                                  #Close the context
 ```
