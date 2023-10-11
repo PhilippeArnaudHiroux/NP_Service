@@ -18,7 +18,7 @@ print(shopID)                                                       #Print out t
 ```
 
 ## Create sockets
-There must be created a socket to send and a sochet to receive. And give the sockets an adress to sent to or receive from.
+There must be created a socket to send and a socket to receive. And give the sockets an adress to sent to or receive from.
 ```py
 context = zmq.Context()                                             #ZeroMQ context object
 socketSend = context.socket(zmq.PUSH)                               #SocketSend is to PUSH
@@ -94,7 +94,7 @@ auth = {'Authorization' : '' }                                                  
 ```
 
 ## Create sockets
-There must be created a socket to send and a sochet to receive. And give the sockets an adress to sent to or receive from.
+There must be created a socket to send and a socket to receive. And give the sockets an adress to sent to or receive from.
 ```py
 context = zmq.Context()                                                         #ZeroMQ context
 socketSend = context.socket(zmq.PUSH)                                           #socketSend is to PUSH
@@ -147,4 +147,35 @@ At the end of the code you have to close your sockets.
 socketRecv.close()                                                              #Close the socketRecv
 socketSend.close()                                                              #Close the socketSend
 context.term()                                                                  #Close the context
+```
+
+# zmqScanner
+The [zmqScanne](https://github.com/PhilippeArnaudHiroux/NP_Service/blob/main/python/zmqScanner.py) will scan for everything that will be send on the given adress
+
+## Import
+The imports needed for this code are.
+```py
+import zmq 
+from datetime import datetime
+```
+
+## Create socket
+There must be created a socket to receive. And give the socket an adress to receive from.<br>
+If you fill in **topic_filter** you can filter on a specific topic. If you leave it empty, it will show you everything.
+```py
+context = zmq.Context()                                     #ZeroMQ context object
+subscriber = context.socket(zmq.SUB)                        #subscriber is to SUB
+subscriber.connect("tcp://benternet.pxl-ea-ict.be:24042")   #Lissen to this adress
+topic_filter = ""                                           #Create a string (by pasting a text between the "" you can filter on topics)
+subscriber.setsockopt_string(zmq.SUBSCRIBE, topic_filter)   #The code can only receive the strings that start with the value stored in topicRecv
+```
+
+## while loop
+First the code will look what time it is. Afhter that is will receive all the message that are send on the adress. Or only the topic that you gave if you have given a topic. At the end it will print out the time and the received message.
+```py
+while True:                                                 #Keep running this code
+    now = datetime.now()                                    #Take the time
+    date_now = now.strftime("%Y-%m-%d %H:%M:%S")            #Take the year - month - day - hour - minute - seconds
+    message = subscriber.recv_string()                      #Receive a string
+    print(date_now, " - ", message)                         #Print out the text
 ```
