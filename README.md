@@ -71,7 +71,7 @@ In this part the code from both application will be explained.
 First the code will generate his own **shopID**.
 ```cpp
 int size = (rand() % 5) +5;
-for(int i=0; i&lt;size; i++)
+for(int i=0; i<size; i++)
 {
     shopID = shopID + char('A' + rand() % 26);
 }
@@ -82,18 +82,18 @@ cout << shopID << endl;
 ### 2. send messages
 The application wil first ask to type your **command** and **product**. Afhter this it will add all strings together to one string.<br>
 When the string is created, the whole string will be send with **ventilator.send(...)**.
-<pre><code>
+```cpp
 cout << "Enter the command: ";                          //Print out the text
 cin >> sendString;                                      //Let the user type in a command
 sendString = pushSubject + shopID + sendString;
 ventilator.send(sendString.c_str(), sendString.size()); //Send the string
-</code></pre>
+```
 
 ### 3. recv messages
 When the client has send his messages, it will start lissening to incoming messages. Once it has received a messages, it will rebuild this messages to a string.<br>
 Then the first five characters of the string will be removed (shop?).<br>
 The client application will keep lissening until it received the messages **end**. When it received the messages **end**, the code will go back to "send messages" part.
-<pre><code>
+```cpp
 do{
     subscriber.recv(msg);                                           //Receive the message
     receivedString  = string( (char*) msg->data(), msg->size() );   //Convert the received message to a string
@@ -104,7 +104,7 @@ do{
         cout << "    -> " << receivedString  << endl;               //Print out the text
     }
 }while(receivedString  != "end");                                   //As long as the end command is not received
-</code></pre>
+```
 
 ## Service
 ### 1. Recv message
@@ -117,7 +117,7 @@ Afhter all these steps we have 3 strings to work with:
 * shopID
 * firsthree
 * theProduct
-<pre><code>
+```cpp
 subscriber.recv(msg);                                       //Receive the message
 receivedString = string((char*) msg->data(), msg->size());  //Convert the received message to a string
 receivedString.erase(0,5);                                  //Remove the first 5 characters of the string (sub topic)
@@ -126,13 +126,13 @@ firstThree = delUppChar(receivedString);                                //Set fi
 theProduct = delUppChar(receivedString);                                //Set theProduct equal to receivedString
 firstThree.erase(3,firstThree.size());                      //Remove everything after the first 3 characters
 theProduct.erase(0, 3);                                     //Remove the first 3 characters
-</code></pre>
+```
 
 ### 2. Check shopID
 When you start the program, the **shopIDvector** will be empty. So the first time the programming runs, the **shopID** will be add to the vector.<br>
 Every other time the program will first check if the **shopID** is already add into the **shopIDvector**. If the ID is in the vector, the function **readTXTfile** will read out the txt file and push_back everyting in to a vector.<br>
 Else the **shopID** will be add to the **shopIDvector**.
-<pre><code>
+```cpp
 if(shopIDvector.size()==0)
 {
     shopIDvector.push_back(shopID);
@@ -140,7 +140,7 @@ if(shopIDvector.size()==0)
 }
 else
 {
-    for(int k=0; k&lt;shopIDvector.size(); k++)
+    for(int k=0; k<shopIDvector.size(); k++)
     {
         if(shopID == shopIDvector.at(k))
         {
@@ -154,13 +154,13 @@ else
         }
     }
 }
-</code></pre>
+```
 
 ### 3. Command
 ### add
 In the add function, the product will be add to the **shopBag** vector. The function will also send a message back to the client, and the **end** message.
-<pre><code>
-vector &lt;string&gt; add(string product, vector &lt;string&gt; bag, string push, string id)
+```cpp
+vector <string> add(string product, vector <string> bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                        //Service push
@@ -177,12 +177,12 @@ vector &lt;string&gt; add(string product, vector &lt;string&gt; bag, string push
 
     return bag;
 }
-</code></pre>
+```
 
 ### get
 With the get function the service will send each element of the **shopBag** vector to the client. At the end it will also send the **end** message.
-<pre><code>
-void get(string product, vector &lt;string&gt; bag, string push, string id)
+```cpp
+void get(string product, vector <string> bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
@@ -200,12 +200,12 @@ void get(string product, vector &lt;string&gt; bag, string push, string id)
     sendString = push + id + "end";
     ventilator.send(sendString.c_str(), sendString.size());    //Forward that client may stop listening
 }
-</code></pre>
+```
 
 ### del
 The del function will delete the product out of the **shopBag** vector. Also here will the **end** message be send to the client.
-<pre><code>
-vector &lt;string&gt; del(string product, vector &lt;string&gt; bag, string push, string id)
+```cpp
+vector <string> del(string product, vector <string> bag, string push, string id)
 {
     zmq::context_t context(1);
     zmq::socket_t ventilator( context, ZMQ_PUSH );                      //Service push
@@ -224,22 +224,22 @@ vector &lt;string&gt; del(string product, vector &lt;string&gt; bag, string push
 
     return bag;
 }
-</code></pre>
+```
 
 ## 4. Make txt file
 When the product are add or delete out of the **shopBag** vector. the function **writeTXTfile** will overwrite the txt file with the right **shopID**.
-<pre><code>
-vector &lt;string&gt; bag;
+```cpp
+vector <string> bag;
 ifstream txtFile("../txt_files/" + id + ".txt");
 string prouct;
 while(getline(txtFile, prouct)){bag.push_back(prouct);}
 txtFile.close();
 
 return bag;
-</code></pre>
+```
 
 ## 5. Clear vector
 At the end the **shopBag** will be cleared so its ready to use again.
-<pre><code>
+```cpp
 shopBag.clear();
-</code></pre>
+```
